@@ -1,3 +1,4 @@
+carrots
 tomatoes
 celery
 potatoes
@@ -5,3 +6,4 @@ cucumber
 lettuce
 endives
 asparagus
+cabbage
