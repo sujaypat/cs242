@@ -3,3 +3,5 @@ celery
 potatoes
 cucumber
 lettuce
+endives
+asparagus
