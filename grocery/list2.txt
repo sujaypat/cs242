@@ -1,4 +1,4 @@
-carrots
+CARROTS
 tomatoes
 celery
 potatoes
