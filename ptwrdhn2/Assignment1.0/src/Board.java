@@ -99,4 +99,28 @@ public class Board {
         return false;
     }
 
+    public boolean inStalemate(int color){
+        boolean allStale = false;
+        for (int row = 0; row < board.length; row++) {
+            for (int col = 0; col < board[row].length; col++) {
+                if (board[row][col] != null && board[row][col].color == color){
+                    allStale |= tryToGoEverywhere(row, col, color);
+                }
+            }
+        }
+        return allStale;
+    }
+
+    private boolean tryToGoEverywhere(int currRow, int currCol, int color) {
+        boolean canGoAnywhere = false;
+        for (int row = 0; row < board.length; row++) {
+            for (int col = 0; col < board[row].length; col++) {
+                if (board[currRow][currCol] != null && board[currRow][currCol].color == color){
+                    canGoAnywhere |= this.move(currRow, currCol, row, col);
+                }
+            }
+        }
+        return canGoAnywhere;
+    }
+
 }
