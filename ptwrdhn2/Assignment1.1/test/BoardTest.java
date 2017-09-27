@@ -2,6 +2,10 @@ import junit.framework.TestCase;
 
 public class BoardTest extends TestCase {
 
+    /**
+     * Test movement and capture
+     * @throws Exception
+     */
     public void testMove() throws Exception {
         Board testGame = new Board(8, 8);
         assertTrue(testGame.move(6, 1, 4, 1)); //pawn up 2 spaces on first move (valid)
@@ -11,6 +15,10 @@ public class BoardTest extends TestCase {
         assertFalse(testGame.move(7, 7, 6, 7)); // valid move, but collision
     }
 
+    /**
+     * Test bounds checks
+     * @throws Exception
+     */
     public void testInBounds() throws Exception {
         Board testGame = new Board(8, 8);
         assertTrue(testGame.inBounds(0, 0)); // in bounds

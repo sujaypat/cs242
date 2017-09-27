@@ -3,6 +3,10 @@ import junit.framework.TestCase;
 public class KingTest extends TestCase {
 
 
+    /**
+     * Test movement and capture
+     * @throws Exception
+     */
     public void testMove() throws Exception {
         Board testGame = new Board(8, 8);
         assertTrue(testGame.getBoard()[7][4] instanceof King);
@@ -12,6 +16,10 @@ public class KingTest extends TestCase {
         assertTrue(testGame.move(7, 4, 6, 4)); // valid move
     }
 
+    /**
+     * Test king in check
+     * @throws Exception
+     */
     public void testIsInCheck() throws Exception {
         Board testGame = new Board(8, 8);
         assertTrue(testGame.getBoard()[7][4] instanceof King);
@@ -28,6 +36,10 @@ public class KingTest extends TestCase {
         assertFalse(testGame.move(3, 4, 2, 4)); // move king into check
     }
 
+    /**
+     * Test king in checkmate
+     * @throws Exception
+     */
     public void testIsInCheckMate() throws Exception {
         // use a knight probably
         Board testGame = new Board(8, 8);

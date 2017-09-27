@@ -2,6 +2,10 @@ import junit.framework.TestCase;
 
 public class JesterTest extends TestCase {
 
+    /**
+     * Test movement and capture
+     * @throws Exception
+     */
     public void testMove() throws Exception {
         Board testGame = new Board(8,8);
         assertFalse(testGame.move(6,7,5,7)); // invalid move

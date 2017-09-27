@@ -2,6 +2,10 @@ import junit.framework.TestCase;
 
 public class RookTest extends TestCase {
 
+    /**
+     * Test movement and capture
+     * @throws Exception
+     */
     public void testMove() throws Exception {
         Board testGame = new Board(8, 8);
 //        assertTrue(testGame.move(7,0,5,0)); // valid move (up 2)

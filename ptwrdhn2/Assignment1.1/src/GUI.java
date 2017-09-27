@@ -56,7 +56,7 @@ public class GUI {
                     new BufferedImage(64, 64, BufferedImage.TYPE_INT_ARGB));
                 square.setIcon(holder);
 
-                if ((j % 2 == 1 && i % 2 == 1) || (j % 2 == 0 && i % 2 == 0)) {
+                if ((j % 2 == 1 && i % 2 == 0) || (j % 2 == 0 && i % 2 == 1)) {
                     square.setBackground(Color.GRAY);
                 } else {
                     square.setBackground(Color.WHITE);
@@ -65,7 +65,6 @@ public class GUI {
                 boardSquares[i][j] = square;
             }
         }
-        // fill the black back piece row
         for (int col = 0; col < 8; col++) {
             for (int row = 0; row < 8; row++) {
                 chessBoard.add(boardSquares[row][col]);
