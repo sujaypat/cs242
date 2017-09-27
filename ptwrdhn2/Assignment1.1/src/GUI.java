@@ -46,17 +46,16 @@ public class GUI {
         outerPanel.add(chessBoard);
         gui.add(outerPanel);
 
-        Insets buttonMargin = new Insets(0, 0, 0, 0);
         for (int i = 0; i < boardSquares.length; i++) {
             for (int j = 0; j < boardSquares[i].length; j++) {
                 JButton square = new JButton();
-                square.setBorder(new EmptyBorder(buttonMargin));
+                square.setBorder(new EmptyBorder(0,0,0,0));
 
                 // 64x64 placeholder
                 ImageIcon holder = new ImageIcon(
                     new BufferedImage(64, 64, BufferedImage.TYPE_INT_ARGB));
                 square.setIcon(holder);
-                
+
                 if ((j % 2 == 1 && i % 2 == 1) || (j % 2 == 0 && i % 2 == 0)) {
                     square.setBackground(Color.GRAY);
                 } else {
@@ -67,9 +66,9 @@ public class GUI {
             }
         }
         // fill the black back piece row
-        for (int row = 0; row < 8; row++) {
-            for (int col = 0; col < 8; col++) {
-                chessBoard.add(boardSquares[col][row]);
+        for (int col = 0; col < 8; col++) {
+            for (int row = 0; row < 8; row++) {
+                chessBoard.add(boardSquares[row][col]);
             }
         }
         setupNewGame();
