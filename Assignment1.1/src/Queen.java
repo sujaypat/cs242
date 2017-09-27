@@ -33,8 +33,8 @@ public class Queen extends ChessPiece {
             if (Math.abs(currRow - destRow) == 1) {
                 return !checkIfFriendlyInDest(destRow, destCol, board);
             }
-            int start = Math.min(currRow, destRow);
-            int end = Math.max(currRow, destRow);
+            int start = Math.min(currRow, destRow) + 1;
+            int end = Math.max(currRow, destRow) - 1;
             for (int row = start; row < end; row++) {
                 if (board[row][currCol] != null) {
                     return false;
@@ -47,9 +47,6 @@ public class Queen extends ChessPiece {
             if (destCol > currCol && destRow > currRow) { // down and right
                 for (int row = currRow + 1, col = currCol + 1; row < destRow && col < destCol;
                     row++, col++) {
-                    if (row == destRow && col == destCol) {
-                        break;
-                    }
                     if (board[row][col] != null) {
                         return false;
                     }
@@ -59,9 +56,6 @@ public class Queen extends ChessPiece {
             if (destCol > currCol && destRow < currRow) { // up and right
                 for (int row = currRow - 1, col = currCol + 1; row > destRow && col < destCol;
                     row--, col++) {
-                    if (row == destRow && col == destCol) {
-                        break;
-                    }
                     if (board[row][col] != null) {
                         return false;
                     }
@@ -71,9 +65,6 @@ public class Queen extends ChessPiece {
             if (destCol < currCol && destRow > currRow) { // down and left
                 for (int row = currRow + 1, col = currCol - 1; row < destRow && col > destCol;
                     row++, col--) {
-                    if (row == destRow && col == destCol) {
-                        break;
-                    }
                     if (board[row][col] != null) {
                         return false;
                     }
@@ -83,9 +74,6 @@ public class Queen extends ChessPiece {
             if (destCol < currCol && destRow < currRow) { // up and left
                 for (int row = currRow - 1, col = currCol - 1; row > destRow && col > destCol;
                     row--, col--) {
-                    if (row == destRow && col == destCol) {
-                        break;
-                    }
                     if (board[row][col] != null) {
                         return false;
                     }
