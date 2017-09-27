@@ -12,12 +12,6 @@ public class Board {
         initBoard();
     }
 
-    public Board() {
-
-        board = new ChessPiece[8][8];
-        initBoard();
-    }
-
     public ChessPiece[][] getBoard() {
 
         return this.board;
@@ -29,6 +23,12 @@ public class Board {
         }
         Arrays.fill(board[1], new Pawn(Constants.BLACK));
         Arrays.fill(board[board.length - 2], new Pawn(Constants.WHITE));
+
+        board[1][0] = new TallBoye(Constants.BLACK);
+        board[board.length - 2][0] = new TallBoye(Constants.WHITE);
+
+        board[1][board.length - 1] = new Jester(Constants.BLACK);
+        board[board.length - 2][board[0].length - 1] = new Jester(Constants.WHITE);
 
         board[0][0] = new Rook(Constants.BLACK);
         board[0][board[0].length - 1] = new Rook(Constants.BLACK);
@@ -57,6 +57,7 @@ public class Board {
 
         return this.board[row][col] == null;
     }
+
     // TODO: compare color of piece with whoseTurn variable to enforce moves of your own pieces
     public boolean move(int originRow, int originCol, int destRow, int destCol) {
         if (!inBounds(destRow, destCol)) {
@@ -67,6 +68,10 @@ public class Board {
             System.out.println("There is no piece at the given starting position!");
             return false;
         }
+//        if (board[originRow][originCol].color != whoseTurn) {
+//            System.out.println("This is not your piece!");
+//            return false;
+//        }
         if (board[originRow][originCol].move(originRow, originCol, destRow, destCol, board)) {
             if (!isEmpty(destRow, destCol)) {
                 System.out.println(

@@ -29,6 +29,7 @@ public class KingTest extends TestCase {
     }
 
     public void testIsInCheckMate() throws Exception {
+        // use a knight probably
     }
 
 }
