@@ -2,6 +2,10 @@ import junit.framework.TestCase;
 
 public class QueenTest extends TestCase {
 
+    /**
+     * Test movement and capture
+     * @throws Exception
+     */
     public void testMove() throws Exception {
         Board testGame = new Board(8, 8);
         assertFalse(testGame.move(7,3,7,4)); // valid move, but collision

@@ -2,6 +2,10 @@ import junit.framework.TestCase;
 
 public class TallBoyeTest extends TestCase {
 
+    /**
+     * Test movement and capture
+     * @throws Exception
+     */
     public void testMove() throws Exception {
         Board testGame = new Board(8, 8);
         assertTrue(testGame.move(6, 0, 4, 0)); // valid move
