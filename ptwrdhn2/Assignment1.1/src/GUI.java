@@ -1,18 +1,9 @@
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
-import java.awt.Image;
-import java.awt.Insets;
+import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
+import java.io.*;
+import javax.imageio.*;
+import javax.swing.*;
+import javax.swing.border.*;
 
 public class GUI {
 
@@ -32,14 +23,14 @@ public class GUI {
 
     public static void main(String[] args) {
 
-//        GUI cg = new GUI();
-//
-//        JFrame f = new JFrame("CS242 Chess");
-//        f.add(cg.getGui());
-//        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//        f.pack();
-//        f.setMinimumSize(f.getSize());
-//        f.setVisible(true);
+        GUI cg = new GUI();
+
+        JFrame f = new JFrame("CS242 Chess");
+        f.add(cg.getGui());
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        f.pack();
+        f.setMinimumSize(f.getSize());
+        f.setVisible(true);
     }
 
     /**
@@ -65,6 +56,7 @@ public class GUI {
                 ImageIcon holder = new ImageIcon(
                     new BufferedImage(64, 64, BufferedImage.TYPE_INT_ARGB));
                 square.setIcon(holder);
+                
                 if ((j % 2 == 1 && i % 2 == 1) || (j % 2 == 0 && i % 2 == 0)) {
                     square.setBackground(Color.GRAY);
                 } else {
@@ -83,7 +75,7 @@ public class GUI {
         setupNewGame();
     }
 
-    public final JComponent getGui() {
+    public JComponent getGui() {
         return gui;
     }
 
@@ -114,7 +106,6 @@ public class GUI {
      * Initializes the icons of the initial chess board piece places
      */
     private final void setupNewGame() {
-        // set up the black pieces
         for (int i = 0; i < STARTING_ROW.length; i++) {
             boardSquares[i][0].setIcon(new ImageIcon(
                 pieceImages[Constants.BLACK][STARTING_ROW[i]]));
@@ -127,6 +118,5 @@ public class GUI {
             boardSquares[i][6].setIcon(new ImageIcon(
                 pieceImages[Constants.WHITE][PAWN]));
         }
-        // set up the white pieces
     }
 }
