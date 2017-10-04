@@ -23,9 +23,8 @@ public class GUI {
     private JPanel chessBoard;
 
     public String p1Name, p2Name;
-    private float[] scores = new float[2];
+    public float[] scores = new float[2];
     public boolean custom = false;
-    public int whoseTurn = Constants.WHITE;
 
     public GUI(int rows, int cols, boolean custom, String player1Name, String player2Name) {
         boardSquares = new JButton[rows][cols];
@@ -69,7 +68,7 @@ public class GUI {
             @Override
             public void actionPerformed(ActionEvent e) {
 //                // Give point to other player
-                scores[1 - whoseTurn] += 1;
+                scores[1 - Controller.whoseTurn] += 1;
                 setupNewGame(custom);
 
             }

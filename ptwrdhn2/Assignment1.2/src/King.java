@@ -38,7 +38,7 @@ public class King extends ChessPiece {
      * @param color color of kind we're testing
      * @return True if the given position can be attacked by any of the opponent's pieces
      */
-    public boolean isInCheck(int currRow, int currCol, ChessPiece[][] board, int color) {
+    public static boolean isInCheck(int currRow, int currCol, ChessPiece[][] board, int color) {
         boolean res = false;
         for (int row = 0; row < board.length; row++) {
             for (int col = 0; col < board[row].length; col++) {
@@ -70,10 +70,14 @@ public class King extends ChessPiece {
      * @return True if the king cannot move anywhere safe
      */
     // This function will run at each iteration of the main game loop.
-    public boolean isInCheckMate(int currRow, int currCol, ChessPiece[][] board, int color) {
+    public static boolean isInCheckMate(int currRow, int currCol, ChessPiece[][] board, int color) {
         boolean mate = false;
         for (int row = -1; row < 1; row++) {
             for (int col = -1; col < 1; col++) {
+                if((currRow + row) > board.length || (currRow + row) < 0 ||
+                    (currCol + col) > board[0].length || (currCol + col) < 0) {
+                    continue;
+                }
                 mate |= isInCheck(currRow + row, currCol + col, board, color);
             }
         }
