@@ -7,7 +7,7 @@ import javax.swing.*;
 public class Controller {
 
     public static Stack<String> moves;
-    public int whoseTurn = Constants.WHITE;
+    public static int whoseTurn = Constants.WHITE;
     public Board gameBoard;
     public GUI gameGUI;
     ImageIcon holder = new ImageIcon(
@@ -94,17 +94,30 @@ public class Controller {
 
         boolean done = false;
         int count = 0;
-        int currCount = 0;
+        int currMoves = 0;
 
         while(!done){
-            while (moves.size() % 2 != 0) {}
+            System.out.println(moves.size() + " " + currMoves);
+            while (moves.size() == currMoves || moves.size() %2 != 0) {}
+
             if(gameBoard.inStalemate(whoseTurn)){
                 System.out.println("Stalemate detected");
                 break;
             }
+            for (int row = 0; row < gameBoard.getBoard().length; row++) {
+                for (int col = 0; col < gameBoard.getBoard()[0].length; col++) {
+                    if (gameBoard.getBoard()[row][col] != null && gameBoard.getBoard()[row][col] instanceof King) {
+                        if(King.isInCheckMate(row, col, gameBoard.getBoard(), whoseTurn)) {
+                            JOptionPane.showMessageDialog(null, "King in checkmate!");
+                            gameGUI.scores[1 - whoseTurn] += 1;
+                            break;
+                        }
+                    }
+                }
+            }
 
-            System.out.println("move number: " + count++);
-            while(moves.size() < 2) {}
+//            System.out.println("move number: " + count++);
+//            while(moves.size() < 2) {}
 //            while (moves.size() % 2 != 0) {}
 
             String destination = moves.pop();
@@ -118,7 +131,12 @@ public class Controller {
             int origRow = Integer.parseInt(origSquares[1]);
             int origCol = Integer.parseInt(origSquares[0]);
 
-
+            if (gameBoard.getBoard()[origRow][origCol].color != whoseTurn) {
+                JOptionPane.showMessageDialog(null, "This is not your piece!");
+                moves.pop();
+                moves.pop();
+                continue;
+            }
 
             if(gameBoard.move(origRow, origCol, destRow, destCol)){
                 gameGUI.boardSquares[destCol][destRow].setIcon(gameGUI.boardSquares[origCol][origRow].getIcon());
@@ -127,11 +145,13 @@ public class Controller {
                 gameGUI.boardSquares[origCol][origRow].repaint();
                 System.out.println("Valid move");
                 whoseTurn = 1 - whoseTurn; // alternates between 1 and 0
-                currCount++;
-                continue;
+                currMoves+=2;
             }
-            break;
-
+            else {
+                JOptionPane.showMessageDialog(null, "Illegal/invalid move!");
+                moves.pop();
+                moves.pop();
+            }
         }
     }
 

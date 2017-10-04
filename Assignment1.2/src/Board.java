@@ -25,8 +25,10 @@ public class Board {
         for (int i = 0; i < board.length; i++) {
             Arrays.fill(board[i], null);
         }
-        Arrays.fill(board[1], new Pawn(Constants.BLACK));
-        Arrays.fill(board[board.length - 2], new Pawn(Constants.WHITE));
+        for (int i = 0; i < board[0].length; i++) {
+            board[1][i] = new Pawn(Constants.BLACK);
+            board[board.length - 2][i] = new Pawn(Constants.WHITE);
+        }
 
         if (custom) {
             board[1][0] = new TallBoye(Constants.BLACK);
@@ -81,10 +83,10 @@ public class Board {
             System.out.println("There is no piece at the given starting position!");
             return false;
         }
-        if (actuallyPlaying && board[originRow][originCol].color != whoseTurn) {
-            System.out.println("This is not your piece!");
-            return false;
-        }
+//        if (actuallyPlaying && board[originRow][originCol].color != whoseTurn) {
+//            System.out.println("This is not your piece!");
+//            return false;
+//        }
         if (board[originRow][originCol].move(originRow, originCol, destRow, destCol, board)) {
             if (!isEmpty(destRow, destCol)) {
                 System.out.println(
