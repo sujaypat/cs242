@@ -1,11 +1,22 @@
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.io.*;
-import javax.imageio.*;
-import javax.swing.*;
-import javax.swing.border.*;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JToolBar;
+import javax.swing.border.EmptyBorder;
 
 public class GUI {
 
@@ -19,12 +30,11 @@ public class GUI {
     };
     private final JPanel gui = new JPanel(new BorderLayout(5, 5));
     public JButton[][] boardSquares;
-    private Image[][] pieceImages = new Image[2][8];
-    private JPanel chessBoard;
-
     public String p1Name, p2Name;
     public float[] scores = new float[2];
     public boolean custom = false;
+    private Image[][] pieceImages = new Image[2][8];
+    private JPanel chessBoard;
 
     public GUI(int rows, int cols, boolean custom, String player1Name, String player2Name) {
         boardSquares = new JButton[rows][cols];
@@ -108,7 +118,7 @@ public class GUI {
         for (int i = 0; i < boardSquares.length; i++) {
             for (int j = 0; j < boardSquares[i].length; j++) {
                 JButton square = new JButton();
-                square.setBorder(new EmptyBorder(0,0,0,0));
+                square.setBorder(new EmptyBorder(0, 0, 0, 0));
 
                 // 64x64 placeholder
                 ImageIcon holder = new ImageIcon(
@@ -150,7 +160,8 @@ public class GUI {
             pieceImages[0][4] = ImageIO.read(new File("images/black_bishop.png")); //black bishop
             pieceImages[0][5] = ImageIO.read(new File("images/black_pawn.png")); //black pawn
             pieceImages[0][6] = ImageIO.read(new File("images/black_jester.png")); // black jester
-            pieceImages[0][7] = ImageIO.read(new File("images/black_tallboye.png")); // black tallboye
+            pieceImages[0][7] = ImageIO
+                .read(new File("images/black_tallboye.png")); // black tallboye
             pieceImages[1][0] = ImageIO.read(new File("images/white_king.png")); //white king
             pieceImages[1][1] = ImageIO.read(new File("images/white_queen.png")); //white queen
             pieceImages[1][2] = ImageIO.read(new File("images/white_rook.png")); //white rook
@@ -158,7 +169,8 @@ public class GUI {
             pieceImages[1][4] = ImageIO.read(new File("images/white_bishop.png")); //white bishop
             pieceImages[1][5] = ImageIO.read(new File("images/white_pawn.png")); //white pawn
             pieceImages[1][6] = ImageIO.read(new File("images/white_jester.png")); // white jester
-            pieceImages[1][7] = ImageIO.read(new File("images/white_tallboye.png")); // white tallboye
+            pieceImages[1][7] = ImageIO
+                .read(new File("images/white_tallboye.png")); // white tallboye
         } catch (IOException e) {
             e.printStackTrace();
             System.exit(1);
@@ -177,13 +189,12 @@ public class GUI {
         }
         // instantiate pawns and jester/tallboye if we're using custom pieces
         for (int i = 0; i < STARTING_ROW.length; i++) {
-            if(customPieces){
+            if (customPieces) {
                 boardSquares[i][1].setIcon(new ImageIcon(
                     pieceImages[Constants.BLACK][CUSTOM_PAWNS[i]]));
                 boardSquares[i][boardSquares.length - 2].setIcon(new ImageIcon(
                     pieceImages[Constants.WHITE][CUSTOM_PAWNS[i]]));
-            }
-            else {
+            } else {
                 boardSquares[i][1].setIcon(new ImageIcon(
                     pieceImages[Constants.BLACK][PAWN]));
                 boardSquares[i][boardSquares.length - 2].setIcon(new ImageIcon(

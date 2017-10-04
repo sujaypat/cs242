@@ -8,22 +8,26 @@ import javax.swing.border.*;
 public class GUI {
 
     public static final int QUEEN = 0, KING = 1,
-        ROOK = 2, KNIGHT = 3, BISHOP = 4, PAWN = 5;
+        ROOK = 2, KNIGHT = 3, BISHOP = 4, PAWN = 5, JESTER = 6, TALLBOYE = 7;
+    public static final int[] CUSTOM_PAWNS = {
+        TALLBOYE, PAWN, PAWN, PAWN, PAWN, PAWN, PAWN, JESTER
+    };
     public static final int[] STARTING_ROW = {
         ROOK, KNIGHT, BISHOP, KING, QUEEN, BISHOP, KNIGHT, ROOK
     };
     private final JPanel gui = new JPanel(new BorderLayout(3, 3));
-    private JButton[][] boardSquares = new JButton[8][8];
-    private Image[][] pieceImages = new Image[2][6];
+    private JButton[][] boardSquares;
+    private Image[][] pieceImages = new Image[2][8];
     private JPanel chessBoard;
 
-    public GUI() {
-        initializeGui();
+    public GUI(int rows, int cols, boolean custom) {
+        initializeGui(rows, cols, custom);
+        boardSquares = new JButton[rows][cols];
     }
 
     public static void main(String[] args) {
 
-        GUI cg = new GUI();
+        GUI cg = new GUI(8,8, false);
 
         JFrame f = new JFrame("CS242 Chess");
         f.add(cg.getGui());
@@ -36,10 +40,10 @@ public class GUI {
     /**
      * Method to set up initial state of GUI
      */
-    public final void initializeGui() {
+    public final void initializeGui(int rows, int cols, boolean custom) {
         createImages();
 
-        chessBoard = new JPanel(new GridLayout(0, 8));
+        chessBoard = new JPanel(new GridLayout(0, cols));
         chessBoard.setPreferredSize(new Dimension(500, 500));
 
         JPanel outerPanel = new JPanel(new GridBagLayout());
@@ -70,7 +74,7 @@ public class GUI {
                 chessBoard.add(boardSquares[row][col]);
             }
         }
-        setupNewGame();
+        setupNewGame(custom);
     }
 
     public JComponent getGui() {
@@ -88,13 +92,17 @@ public class GUI {
             pieceImages[0][3] = ImageIO.read(new File("images/black_knight.png")); //black knight
             pieceImages[0][4] = ImageIO.read(new File("images/black_bishop.png")); //black bishop
             pieceImages[0][5] = ImageIO.read(new File("images/black_pawn.png")); //black pawn
+            pieceImages[0][6] = null; // black jester
+            pieceImages[0][7] = null; // black tallboye
             pieceImages[1][0] = ImageIO.read(new File("images/white_king.png")); //white king
             pieceImages[1][1] = ImageIO.read(new File("images/white_queen.png")); //white queen
             pieceImages[1][2] = ImageIO.read(new File("images/white_rook.png")); //white rook
             pieceImages[1][3] = ImageIO.read(new File("images/white_knight.png")); //white knight
             pieceImages[1][4] = ImageIO.read(new File("images/white_bishop.png")); //white bishop
             pieceImages[1][5] = ImageIO.read(new File("images/white_pawn.png")); //white pawn
-        } catch (Exception e) {
+            pieceImages[0][6] = null; // white jester
+            pieceImages[0][7] = null; // white tallboye
+        } catch (IOException e) {
             e.printStackTrace();
             System.exit(1);
         }
@@ -103,18 +111,27 @@ public class GUI {
     /**
      * Initializes the icons of the initial chess board piece places
      */
-    private final void setupNewGame() {
+    private final void setupNewGame(boolean customPieces) {
         for (int i = 0; i < STARTING_ROW.length; i++) {
             boardSquares[i][0].setIcon(new ImageIcon(
                 pieceImages[Constants.BLACK][STARTING_ROW[i]]));
             boardSquares[i][7].setIcon(new ImageIcon(
                 pieceImages[Constants.WHITE][STARTING_ROW[i]]));
         }
+        // instantiate pawns and jester/tallboye if we're using custom pieces
         for (int i = 0; i < STARTING_ROW.length; i++) {
-            boardSquares[i][1].setIcon(new ImageIcon(
-                pieceImages[Constants.BLACK][PAWN]));
-            boardSquares[i][6].setIcon(new ImageIcon(
-                pieceImages[Constants.WHITE][PAWN]));
+            if(customPieces){
+                boardSquares[i][1].setIcon(new ImageIcon(
+                    pieceImages[Constants.BLACK][CUSTOM_PAWNS[i]]));
+                boardSquares[i][6].setIcon(new ImageIcon(
+                    pieceImages[Constants.WHITE][CUSTOM_PAWNS[i]]));
+            }
+            else {
+                boardSquares[i][1].setIcon(new ImageIcon(
+                    pieceImages[Constants.BLACK][PAWN]));
+                boardSquares[i][6].setIcon(new ImageIcon(
+                    pieceImages[Constants.WHITE][PAWN]));
+            }
         }
     }
 }

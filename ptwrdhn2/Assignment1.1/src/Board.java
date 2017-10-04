@@ -128,4 +128,11 @@ public class Board {
         return canGoAnywhere;
     }
 
+    public void run(){
+        boolean done = false;
+        while(!done){
+
+        }
+    }
+
 }

@@ -18,13 +18,13 @@ public class Jester extends ChessPiece {
     @Override
     public boolean move(int currRow, int currCol, int destRow, int destCol, ChessPiece[][] board) {
         // check if attacking
-        if (Math.abs(currRow - destRow) == 2){
-            if (this.color == Constants.BLACK){
+        if (Math.abs(currRow - destRow) == 2) {
+            if (this.color == Constants.BLACK) {
                 return !checkIfFriendlyInDest(destRow + 1, destCol, board) &&
                     board[destRow][destCol] != null &&
                     board[destRow][destCol].color != this.color;
             }
-            if (this.color == Constants.WHITE){
+            if (this.color == Constants.WHITE) {
                 return !checkIfFriendlyInDest(destRow - 1, destCol, board) &&
                     board[destRow][destCol] != null &&
                     board[destRow][destCol].color != this.color;

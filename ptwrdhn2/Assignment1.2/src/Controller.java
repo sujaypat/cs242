@@ -2,7 +2,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.util.Stack;
-import javax.swing.*;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 public class Controller {
 
@@ -18,7 +21,7 @@ public class Controller {
         moves = new Stack<>();
 
         JFrame frame = new JFrame();
-        String dims = (String)JOptionPane.showInputDialog(
+        String dims = (String) JOptionPane.showInputDialog(
             frame,
             "Game board size (format: rows,cols) where rows >= 8 and cols >= 8:\n",
             "Game setup",
@@ -26,7 +29,6 @@ public class Controller {
             null,
             null,
             null);
-
 
         String[] dimensions = dims.split(",");
         int rows = 8;
@@ -37,15 +39,14 @@ public class Controller {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Defaulting to 8x8");
         }
-        if(rows < 1 || cols < 1) {
+        if (rows < 1 || cols < 1) {
             JOptionPane.showMessageDialog(null, "Defaulting to 8x8");
             rows = 8;
             cols = 8;
-        }
-        else if (rows < 8 || cols < 8) {
+        } else if (rows < 8 || cols < 8) {
             JOptionPane.showMessageDialog(null, "Fine.");
         }
-        String p1 = (String)JOptionPane.showInputDialog(
+        String p1 = (String) JOptionPane.showInputDialog(
             frame,
             "Player 1 name:\n",
             "Game setup",
@@ -53,7 +54,7 @@ public class Controller {
             null,
             null,
             null);
-        String p2 = (String)JOptionPane.showInputDialog(
+        String p2 = (String) JOptionPane.showInputDialog(
             frame,
             "Player 2 name:\n",
             "Game setup",
@@ -61,7 +62,7 @@ public class Controller {
             null,
             null,
             null);
-        String custom = (String)JOptionPane.showInputDialog(
+        String custom = (String) JOptionPane.showInputDialog(
             frame,
             "Custom pieces? (y/n):\n",
             "Game setup",
@@ -69,8 +70,6 @@ public class Controller {
             null,
             null,
             null);
-
-
 
         frame.setVisible(true);
         boolean customPieces = custom.equals("y");
@@ -89,36 +88,38 @@ public class Controller {
     }
 
 
-
-    public void run(){
+    public void run() {
 
         boolean done = false;
-        int count = 0;
+        boolean checkmate = false;
         int currMoves = 0;
 
-        while(!done){
+        while (!done) {
             System.out.println(moves.size() + " " + currMoves);
-            while (moves.size() == currMoves || moves.size() %2 != 0) {}
+            while (moves.size() == currMoves || moves.size() % 2 != 0) {
+            }
 
-            if(gameBoard.inStalemate(whoseTurn)){
+            if (gameBoard.inStalemate(whoseTurn)) {
                 System.out.println("Stalemate detected");
                 break;
             }
-            for (int row = 0; row < gameBoard.getBoard().length; row++) {
-                for (int col = 0; col < gameBoard.getBoard()[0].length; col++) {
-                    if (gameBoard.getBoard()[row][col] != null && gameBoard.getBoard()[row][col] instanceof King) {
-                        if(King.isInCheckMate(row, col, gameBoard.getBoard(), whoseTurn)) {
-                            JOptionPane.showMessageDialog(null, "King in checkmate!");
-                            gameGUI.scores[1 - whoseTurn] += 1;
-                            break;
-                        }
-                    }
-                }
-            }
+//            for (int row = 0; row < gameBoard.getBoard().length; row++) {
+//                for (int col = 0; col < gameBoard.getBoard()[0].length; col++) {
+//                    if (gameBoard.getBoard()[row][col] != null && gameBoard
+//                        .getBoard()[row][col] instanceof King) {
+//                        if (King.isInCheckMate(row, col, gameBoard.getBoard(), whoseTurn)) {
+//                            JOptionPane.showMessageDialog(null, "King in checkmate!");
+//                            gameGUI.scores[1 - whoseTurn] += 1;
+//                            checkmate = true;
+//                            break;
+//                        }
+//                    }
+//                }
+//                if (checkmate) {
+//                    break;
+//                }
+//            }
 
-//            System.out.println("move number: " + count++);
-//            while(moves.size() < 2) {}
-//            while (moves.size() % 2 != 0) {}
 
             String destination = moves.pop();
             String origin = moves.peek();
@@ -138,16 +139,16 @@ public class Controller {
                 continue;
             }
 
-            if(gameBoard.move(origRow, origCol, destRow, destCol)){
-                gameGUI.boardSquares[destCol][destRow].setIcon(gameGUI.boardSquares[origCol][origRow].getIcon());
+            if (gameBoard.move(origRow, origCol, destRow, destCol)) {
+                gameGUI.boardSquares[destCol][destRow]
+                    .setIcon(gameGUI.boardSquares[origCol][origRow].getIcon());
                 gameGUI.boardSquares[origCol][origRow].setIcon(holder);
                 gameGUI.boardSquares[destCol][destRow].repaint();
                 gameGUI.boardSquares[origCol][origRow].repaint();
                 System.out.println("Valid move");
                 whoseTurn = 1 - whoseTurn; // alternates between 1 and 0
-                currMoves+=2;
-            }
-            else {
+                currMoves += 2;
+            } else {
                 JOptionPane.showMessageDialog(null, "Illegal/invalid move!");
                 moves.pop();
                 moves.pop();
