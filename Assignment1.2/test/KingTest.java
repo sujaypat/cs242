@@ -5,10 +5,9 @@ public class KingTest extends TestCase {
 
     /**
      * Test movement and capture
-     * @throws Exception
      */
     public void testMove() throws Exception {
-        Board testGame = new Board(8, 8,false);
+        Board testGame = new Board(8, 8, false);
         assertTrue(testGame.getBoard()[7][4] instanceof King);
         testGame.move(6, 4, 4, 4); // move pawn
         assertFalse(testGame.move(7, 4, 5, 4)); // invalid move
@@ -18,10 +17,9 @@ public class KingTest extends TestCase {
 
     /**
      * Test king in check
-     * @throws Exception
      */
     public void testIsInCheck() throws Exception {
-        Board testGame = new Board(8, 8,false);
+        Board testGame = new Board(8, 8, false);
         assertTrue(testGame.getBoard()[7][4] instanceof King);
 
         testGame.move(6, 5, 4, 5); // move pawn
@@ -38,11 +36,10 @@ public class KingTest extends TestCase {
 
     /**
      * Test king in checkmate
-     * @throws Exception
      */
     public void testIsInCheckMate() throws Exception {
         // use a knight probably
-        Board testGame = new Board(8, 8,false);
+        Board testGame = new Board(8, 8, false);
         testGame.move(7, 1, 5, 2);
         testGame.move(5, 2, 3, 3);
         testGame.move(3, 3, 2, 5); // should be in checkmate

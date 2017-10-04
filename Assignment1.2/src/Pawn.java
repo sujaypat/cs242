@@ -51,13 +51,15 @@ public class Pawn extends ChessPiece {
         if (color == Constants.WHITE) {
             if (Math.abs(destCol - currCol) == 1 && (destRow - currRow) == -1) {
                 this.firstMove = false;
-                return !checkIfFriendlyInDest(destRow, destCol, board) && board[destRow][destCol] != null;
+                return !checkIfFriendlyInDest(destRow, destCol, board)
+                    && board[destRow][destCol] != null;
             }
         }
         if (color == Constants.BLACK) {
             if (Math.abs(destCol - currCol) == 1 && (destRow - currRow == 1)) {
                 this.firstMove = false;
-                return !checkIfFriendlyInDest(destRow, destCol, board) && board[destRow][destCol] != null;
+                return !checkIfFriendlyInDest(destRow, destCol, board)
+                    && board[destRow][destCol] != null;
             }
         }
         return false;

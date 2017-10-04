@@ -39,20 +39,24 @@ public class Pawn extends ChessPiece {
         // Regular movement (i.e. not attacking)
         if (destCol == currCol) {
             if (color == Constants.WHITE && destRow == currRow - 1) {
+                firstMove = false;
                 return !checkIfFriendlyInDest(destRow, destCol, board);
             }
             if (color == Constants.BLACK && destRow == currRow + 1) {
+                firstMove = false;
                 return !checkIfFriendlyInDest(destRow, destCol, board);
             }
         }
         //Attacking
         if (color == Constants.WHITE) {
             if (Math.abs(destCol - currCol) == 1 && (destRow - currRow) == -1) {
+                firstMove = false;
                 return !checkIfFriendlyInDest(destRow, destCol, board);
             }
         }
         if (color == Constants.BLACK) {
             if (Math.abs(destCol - currCol) == 1 && (destRow - currRow == 1)) {
+                firstMove = false;
                 return !checkIfFriendlyInDest(destRow, destCol, board);
             }
         }

@@ -2,9 +2,9 @@ import java.util.Arrays;
 
 public class Board {
 
-    private ChessPiece[][] board = null;
     public int whoseTurn = Constants.WHITE;
     public boolean actuallyPlaying = false;
+    private ChessPiece[][] board = null;
 
     public Board(int rows, int cols, boolean custom) {
 
@@ -67,7 +67,9 @@ public class Board {
     }
 
     /**
-     * Abstracts the actual movement to the specific piece, but does checks for boundaries and ownership
+     * Abstracts the actual movement to the specific piece, but does checks for boundaries and
+     * ownership
+     *
      * @param originRow piece starting row
      * @param originCol piece starting column
      * @param destRow piece ending row
@@ -121,14 +123,14 @@ public class Board {
 
     /**
      * Checks for a specific color in stalemate
+     *
      * @param color currently playing color
-     * @return
      */
     public boolean inStalemate(int color) {
         for (int row = 0; row < board.length; row++) {
             for (int col = 0; col < board[row].length; col++) {
                 if (board[row][col] != null && board[row][col].color == color) {
-                    if(tryToGoEverywhere(row, col, color)){
+                    if (tryToGoEverywhere(row, col, color)) {
                         return false;
                     }
                 }
@@ -141,7 +143,7 @@ public class Board {
         for (int row = 0; row < board.length; row++) {
             for (int col = 0; col < board[row].length; col++) {
                 if (board[currRow][currCol] != null && board[currRow][currCol].color == color) {
-                    if(this.move(currRow, currCol, row, col)){
+                    if (this.move(currRow, currCol, row, col)) {
                         board[currRow][currCol] = board[row][col];
                         board[row][col] = null;
                         return true;

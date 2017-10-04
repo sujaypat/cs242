@@ -4,7 +4,6 @@ public class BoardTest extends TestCase {
 
     /**
      * Test movement and capture
-     * @throws Exception
      */
     public void testMove() throws Exception {
         Board testGame = new Board(8, 8, false);
@@ -17,7 +16,6 @@ public class BoardTest extends TestCase {
 
     /**
      * Test bounds checks
-     * @throws Exception
      */
     public void testInBounds() throws Exception {
         Board testGame = new Board(8, 8, false);
