@@ -3,6 +3,7 @@ require 'time'
 
 class ScrapeLog
 
+  # open/create the file
   def initialize(filename)
     @@filename = filename
     File.open('../' + filename, 'a')

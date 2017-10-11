@@ -7,7 +7,7 @@ require_relative './scrape_log.rb'
 require_relative './graph.rb'
 
 $ACTOR_LIMIT = 25
-$MOVIE_LIMIT = 12
+$MOVIE_LIMIT = 15
 
 class Scraper
 
@@ -88,7 +88,10 @@ class Scraper
       age_born = source.css('th:contains("Born")')
       age = age_born.xpath('//span[@class="noprint ForceAgeToShow"]').text.to_s.gsub(/[^0-9,.]/, "")
       filmography = source.xpath('//div[@id="mw-content-text"]/div[@class="mw-parser-output"]//ul/li/i/a')
-
+      if filmography.text == ""
+        filmography = source.xpath('//div[@id="mw-content-text"]/div[@class="mw-parser-output"][1]//tbody/tr/td/i/a')
+      end
+      # /div[@id='mw-content-text']/div[@class='mw-parser-output']/table[@class='wikitable sortable jquery-tablesorter'][1]/tbody/tr/td/i/a
 
       new_actor = Actor.new(name, age)
 
