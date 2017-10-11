@@ -1,40 +1,43 @@
 require 'test-unit'
+require 'set'
 class Graph
 
   attr_accessor :movies
   attr_accessor :actors
+  attr_accessor :actor_set
+  attr_accessor :movie_set
 
   def initialize
+    @actor_set = Set.new
+    @movie_set = Set.new
     @movies = Array.new
     @actors = Array.new
   end
 
   def actor_insert(actor)
-    @actors.enq(actor)
-    puts @actors
-    for m in @movies # every movie, if actor in movie add actor to movie connections
+    actors << (actor)
+    for m in movies # every movie, if actor in movie add actor to movie connections
         # and add movie to actor's connections
       if m.actor_connections.contains? actor.name
-        actor.movie_connections = actor.movie_connections << m
+        actor.movie_connections << m
       end
     end
   end
 
   def movie_insert(movie)
-    @movies.enq(movie)
-    puts @movies
-    for a in @actors # every movie, if actor in movie add actor to movie connections
+    movies << (movie)
+    for a in actors # every movie, if actor in movie add actor to movie connections
       # and add movie to actor's connections
       if a.movie_connections.contains? movie.title
-        movie.actor_connections = movie.actor_connections << a
+        movie.actor_connections << a
       end
     end
   end
 
   # Iterate through list of movies, find matching name and return gross value
   def gross(movie_name)
-    for m in @movies
-      if m.name == movie_name
+    for m in movies
+      if m.title == movie_name
         return m.gross
       end
     end
@@ -43,15 +46,17 @@ class Graph
 
   def topn_gross(n)
     # sort by gross, slice top n
+    movies.sort_by(&:gross).last(n)
   end
 
   def topn_old(n)
     # sort by age, slice top n
+    actors.sort_by(&:age).last(n)
   end
 
   def actor_movies(actor_name)
     # return all movies connected by an edge to actor
-    for a in @actors
+    for a in actors
       if a.name == actor_name
         return a.movie_connections
       end
@@ -61,8 +66,8 @@ class Graph
 
   def movie_actors(movie_name)
     # same as above but the other way around
-    for m in @movies
-      if m.name == movie_name
+    for m in movies
+      if m.title == movie_name
         return m.actor_connections
       end
     end
@@ -71,10 +76,10 @@ class Graph
 
   def movies_year(year)
     # add all movies from year to list
-    result = List.new
-    for m in @movies
+    result = Array.new
+    for m in movies
       if m.year == year
-        result.enq(m)
+        result << m
       end
     end
     return result
@@ -85,7 +90,7 @@ class Graph
     result = Array.new
     for m in movies_for_year
       for a in m.actor_connections
-        result.enq(a)
+        result << a
       end
     end
     # add all actors from each movie in movies_year to list

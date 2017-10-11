@@ -3,60 +3,62 @@ require 'nokogiri'
 require 'json'
 require 'httparty'
 
-require 'net/http'
-require_relative 'scrape_log.rb'
-require_relative 'graph.rb'
+require_relative './scrape_log.rb'
+require_relative './graph.rb'
 
-$ACTOR_LIMIT = 125
-$MOVIE_LIMIT = 250
+$ACTOR_LIMIT = 25
+$MOVIE_LIMIT = 12
 
 class Scraper
 
-
-  @@logger = ScrapeLog.new('messages.log')
-  @@task_queue = Queue.new # enq for push, deq for pop
-  @@graph = Graph.new
+  attr_accessor :graph
+  attr_accessor :logger
+  attr_accessor :task_queue
 
 
   def initialize(url)
-    @@task_queue.enq(url)
+    @logger = ScrapeLog.new('messages.log')
+    @task_queue = Queue.new # enq for push, deq for pop
+    @graph = Graph.new
+    task_queue.enq(url)
     scrape
   end
 
   def scrape
-    until @@graph.movies.length >= $MOVIE_LIMIT and @@graph.actors.length >= $ACTOR_LIMIT
-      if @@task_queue.length == 0
+    while graph.movies.length < $MOVIE_LIMIT or graph.actors.length < $ACTOR_LIMIT
+      puts "actors: " + graph.actors.length.to_s
+      puts "movies: " + graph.movies.length.to_s
+      if task_queue.length == 0
         return
       end
-      curr_url = @@task_queue.deq
+      curr_url = task_queue.deq
       if curr_url[0] != 'h'
         curr_url = 'https://en.wikipedia.org' + curr_url.to_s
       end
 
-      @@logger.info("analyzing page:" + curr_url.to_s)
+      logger.info("analyzing page:" + curr_url.to_s)
       page = HTTParty::get(curr_url)
       # error check page
       if page == nil
-        @@logger.error("unable to get page " + curr_url.to_s)
+        logger.error("unable to get page " + curr_url.to_s)
         return
       end
       source = Nokogiri::HTML(page)
       # error check source
       if page == nil
-        @@logger.error("unable to get source for " + curr_url.to_s)
+        logger.error("unable to get source for " + curr_url.to_s)
         return
       end
       parse(source)
-
+      sleep(0.01)
     end
-    puts @@task_queue
   end
 
   def parse(source)
-    right_box = source.css('.vevent')
+
     begin
+      right_box = source.css('.vevent')
       title = source.xpath('//div[@id="content"]/h1[@id="firstHeading"]').text.to_s
-      puts title
       movie_gross = parse_money(right_box.css('td:contains("$")').last.text.strip)
       year = Date.parse(right_box.css('span.bday.dtstart.published.updated').text).year
       starring = source.xpath('//div[@id="mw-content-text"]/div[@class="mw-parser-output"]/ul[1]/li/a[1]')
@@ -67,18 +69,26 @@ class Scraper
 
       for link in starring
         @cast << link.attribute('title').to_s
-        @@task_queue << link.attribute('href').to_s
+        task_queue << link.attribute('href').to_s
         new_movie.actor_connections << link.attribute('title').to_s
       end
-      @@graph.movie_insert(new_movie)
+      if graph.movie_set.add? new_movie
+        # @@graph.movies << new_movie
+        graph.movie_insert(new_movie)
+      end
+
+      return
 
     rescue NoMethodError
+    rescue ArgumentError
     end
 
     begin
-      name = source.xpath('//h1[@id="firstHeading"]').to_s
-      age = source.xpath('//tbody/tr[3]/td/span[@class="noprint ForceAgeToShow"]').text.to_s
-      filmography = source.xpath('//div[@id="mw-content-text"]/div[@class="mw-parser-output"]/div[@class="div-col columns column-count column-count-2"]/ul')
+      name = source.xpath('//h1[@id="firstHeading"]').text.to_s
+      age_born = source.css('th:contains("Born")')
+      age = age_born.xpath('//span[@class="noprint ForceAgeToShow"]').text.to_s.gsub(/[^0-9,.]/, "")
+      filmography = source.xpath('//div[@id="mw-content-text"]/div[@class="mw-parser-output"]//ul/li/i/a')
+
 
       new_actor = Actor.new(name, age)
 
@@ -86,11 +96,14 @@ class Scraper
 
       for link in filmography
         @films << link.attribute('title').to_s
-        puts link.attribute('title').to_s
-        @@task_queue << link.attribute('href').to_s
+        # puts link.attribute('title').to_s
+        task_queue << link.attribute('href').to_s
         new_actor.movie_connections << link.attribute('title').to_s
       end
-      @@graph.actor_insert(new_actor)
+      if graph.actor_set.add? new_actor
+        # @@graph.actors << new_actor
+        graph.actor_insert(new_actor)
+      end
 
     rescue NoMethodError
 
@@ -100,16 +113,15 @@ class Scraper
 
   def dump_json
     puts "dumping json"
-    jsonified_movies = @@graph.movies.to_json
-    jsonified_actors = @@graph.actors.to_json
+    jsonified_movies = graph.movies.to_json
+    jsonified_actors = graph.actors.to_json
     File.open('../movies.json', 'w'){ |f| f << jsonified_movies}
     File.open('../actors.json', 'w'){ |f| f << jsonified_actors}
   end
 
   def read_json
-    #@graph.@movies =
-    puts JSON.parse(File.read('../movies.json'))
-    # @graph.@actors = JSON.parse(File.read('actors.json'))
+    graph.movies = JSON.parse(File.read('../movies.json'))
+    graph.actors = JSON.parse(File.read('../actors.json'))
   end
 
   def parse_money(str)
