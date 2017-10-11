@@ -8,7 +8,7 @@ class Scraper_Test < Test::Unit::TestCase
     scr = Scraper.new('https://en.wikipedia.org/wiki/Top_Gun')
     puts "actors: " + scr.graph.actors.length.to_s
     puts "movies: " + scr.graph.movies.length.to_s
-    assert(scr.graph.movies.length >= 12)
+    assert(scr.graph.movies.length >= 15)
     assert(scr.graph.actors.length >= 25)
   end
 
