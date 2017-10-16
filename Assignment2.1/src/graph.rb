@@ -1,5 +1,6 @@
 require 'test-unit'
 require 'set'
+require 'gruff'
 class Graph
 
   attr_accessor :movies
@@ -7,11 +8,12 @@ class Graph
   attr_accessor :actor_set
   attr_accessor :movie_set
 
-  def initialize
+  def initialize(filename)
     @actor_set = Set.new
     @movie_set = Set.new
     @movies = Array.new
     @actors = Array.new
+    read_json(filename)
   end
 
   def actor_insert(actor)
@@ -97,6 +99,80 @@ class Graph
     return result
   end
 
+
+  # counts the number of connections each actor has and sorts it, and filters the top 5
+  def analyze_hub
+    names = {}
+    labels = {}
+
+    actors.each do |actor|
+      count = 0
+      actor.movie_connections.each do |movie|
+        count += movie.actor_connections.length
+      end
+      names[actor.name] = count
+    end
+    names = names.sort_by{|k,v| v}.reverse[0..5]
+
+    iter = -1
+    names.each do |k,v|
+      labels[iter+=1] = k
+    end
+
+    g = Gruff::Bar.new('1600x900')
+    g.label_stagger_height = 20
+    g.sort = false
+    g.title = 'hub actors'
+    g.labels = labels
+    g.data('data',names.collect { |k, v| v })
+    g.write('hub.png')
+  end
+
+  def analyze_age_gross
+    ages = {}
+    grosses = {}
+
+
+    g = Gruff::Line.new('1600x900')
+
+  end
+
+
+
+  def dump_json
+    # puts "dumping json"
+    jsonified_movies = graph.movies.to_json
+    jsonified_actors = graph.actors.to_json
+    File.open('../movies.json', 'w'){ |f| f << jsonified_movies}
+    File.open('../actors.json', 'w'){ |f| f << jsonified_actors}
+  end
+
+  def read_json(filename)
+    all_json = JSON.parse(File.read('../' + filename))
+    actors = all_json[0]
+    movies = all_json[1]
+
+    actors.each do |_, value|
+      temp_actor = Actor.new(value["name"], value["total_gross"], value["age"])
+      value["movies"].each do |movie_title|
+        begin
+        temp_movie = Movie.new(movies[movie_title], movies[movie_title]["box_office"], movies[movie_title]["year"])
+        if !@movie_set.include? temp_movie
+          @movies << temp_movie
+          @movie_set << temp_movie
+        end
+        temp_actor.movie_connections << temp_movie
+        temp_movie.actor_connections << temp_actor
+        rescue => error
+          # puts error
+        end
+      end
+      # puts temp_actor.movie_connections.length
+      @actors << temp_actor
+      @actor_set << temp_actor
+    end
+  end
+
 end
 
 class Movie
@@ -120,10 +196,10 @@ class Actor
   attr_accessor :gross
   attr_accessor :movie_connections
 
-  def initialize(name, age)
+  def initialize(name, gross, age)
     @name = name
     @age = age
-    @gross = 0
+    @gross = gross
     @movie_connections = Array.new
   end
 
