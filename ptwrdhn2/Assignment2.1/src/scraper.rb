@@ -13,15 +13,13 @@ class Scraper
 
   attr_accessor :graph
   attr_accessor :logger
-  attr_accessor :task_queue
+  # attr_accessor :task_queue
 
 
   def initialize(url)
     @logger = ScrapeLog.new('messages.log')
-    @task_queue = Queue.new # enq for push, deq for pop
     @graph = Graph.new
-    task_queue.enq(url)
-    scrape
+    read_json('data.json')
   end
 
   def scrape
@@ -112,19 +110,6 @@ class Scraper
 
     end
 
-  end
-
-  def dump_json
-    puts "dumping json"
-    jsonified_movies = graph.movies.to_json
-    jsonified_actors = graph.actors.to_json
-    File.open('../movies.json', 'w'){ |f| f << jsonified_movies}
-    File.open('../actors.json', 'w'){ |f| f << jsonified_actors}
-  end
-
-  def read_json
-    graph.movies = JSON.parse(File.read('../movies.json'))
-    graph.actors = JSON.parse(File.read('../actors.json'))
   end
 
   def parse_money(str)

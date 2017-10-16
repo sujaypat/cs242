@@ -16,4 +16,11 @@ class Graph_Test < Test::Unit::TestCase
     assert(graph.actor_movies("test actor").length == 0)
   end
 
+  def test_json
+    graph = Graph.new
+    puts "actors: " + graph.actors.length.to_s
+    puts "movies: " + graph.movies.length.to_s
+    graph.dump_json
+  end
+
 end

@@ -12,13 +12,6 @@ class Scraper_Test < Test::Unit::TestCase
     assert(scr.graph.actors.length >= 25)
   end
 
-  def test_json
-    scr = Scraper.new('https://en.wikipedia.org/wiki/Top_Gun')
-    puts "actors: " + scr.graph.actors.length.to_s
-    puts "movies: " + scr.graph.movies.length.to_s
-    scr.dump_json
-  end
-
   def test_money
     scr = Scraper.new('https://en.wikipedia.org/wiki/Top_Gun')
 
