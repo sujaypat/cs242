@@ -182,6 +182,7 @@ class Graph
     g.write('hub.png')
   end
 
+  # plots age vs gross
   def analyze_age_gross
     ages = Array.new
     grosses = Array.new
@@ -221,6 +222,8 @@ class Graph
         if !found_movie
           @movies << temp_movie
           @movie_set << temp_movie
+          temp_actor.movie_connections << temp_movie
+          temp_movie.actor_connections << temp_actor
         else
           temp_actor.movie_connections << found_movie
           found_movie.actor_connections << temp_actor

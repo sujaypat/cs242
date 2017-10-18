@@ -19,7 +19,6 @@ get '/actors' do
       elsif parts[0] == "gross"
         temp |= graph.get_actor_gross(parts[1])
       elsif parts[0] == "age"
-        puts 'parsing year'
         temp |= graph.get_actor_age(parts[1])
       end
     end
@@ -28,7 +27,7 @@ get '/actors' do
   return result.map do |actor| actor.to_json end
 end
 
-get '/movies?' do
+get '/movies' do
   req = request.query_string
   result = graph.movies.dup
   ands = req.split("&")
@@ -119,9 +118,9 @@ post '/actors' do
     name = request_payload['name']
     gross = request_payload['total_gross']
     age = request_payload['age']
-    new_actor = Actor.new(name|'', gross|0, age|0)
-    @actors << new_actor
-    @actor_set << new_actor
+    new_actor = Actor.new(name ? name : '', gross ? gross : 0, age ? age : 0)
+    graph.actors << new_actor
+    graph.actor_set << new_actor
     status 201
     return
   end
@@ -131,12 +130,12 @@ end
 post '/movies' do
   request_payload = JSON.parse(request.body.read)
   begin
-    title = request_payload['title']
+    title = request_payload['name']
     box_office = request_payload['box_office']
     year = request_payload['year']
-    new_movie = Actor.new(title|'', box_office|0, year|0)
-    @movies << new_movie
-    @movie_set << new_movie
+    new_movie = Actor.new(title ? title : '', box_office ? box_office : 0, year ? year : 0)
+    graph.movies << new_movie
+    graph.movie_set << new_movie
     status 201
     return
   end
