@@ -6,11 +6,47 @@ graph = Graph.new('data.json')
 
 
 get '/actors' do
-  puts request.query_string
+  req = request.query_string
+  result = graph.actors.dup
+  ands = req.split("&")
+  ands.each do |clause|
+    temp = Array.new
+    ors = clause.split("|")
+    ors.each do |o_clause|
+      parts = o_clause.split("=")
+      if parts[0] == "name"
+        temp |= graph.get_actor_name(parts[1])
+      elsif parts[0] == "gross"
+        temp |= graph.get_actor_gross(parts[1])
+      elsif parts[0] == "age"
+        temp |= graph.get_actor_age(parts[1])
+      end
+    end
+    result &= temp
+  end
+  return result.map do |actor| actor.to_json end
 end
 
 get '/movies?' do
-  puts request.query_string
+  req = request.query_string
+  result = graph.movies.dup
+  ands = req.split("&")
+  ands.each do |clause|
+    temp = Array.new
+    ors = clause.split("|")
+    ors.each do |o_clause|
+      parts = o_clause.split("=")
+      if parts[0] == "name"
+        temp |= graph.get_movie_name(parts[1])
+      elsif parts[0] == "gross"
+        temp |= graph.get_movie_gross(parts[1])
+      elsif parts[0] == "year"
+        temp |= graph.movies_year(parts[1])
+      end
+    end
+    result &= temp
+  end
+  return result.map do |movie| movie.to_json end
 end
 
 get '/actors/:name' do

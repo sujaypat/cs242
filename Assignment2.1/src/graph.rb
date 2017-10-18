@@ -17,6 +17,68 @@ class Graph
     read_json('/Users/Sujay/Documents/cs242/Assignment2.1/' + filename)
   end
 
+  def get_actor_name(name)
+    name = name.delete('"')
+    result = Array.new
+    actors.each do |actor|
+      if actor.name.include? name.delete('"')
+        result << actor
+      end
+    end
+    return result
+  end
+
+  def get_actor_age(age)
+    result = Array.new
+    actors.each do |actor|
+      if actor.age == age
+        result << actor
+      end
+    end
+    return result
+  end
+
+  def get_actor_gross(gross)
+    result = Array.new
+    actors.each do |actor|
+      if actor.gross == gross
+        result << actor
+      end
+    end
+    return result
+  end
+
+  def get_movie_name(title)
+    result = Array.new
+    movies.each do |movie|
+      if movie.title.include? title.tr('"', '')
+        result << movie
+      end
+    end
+    return result
+  end
+
+  def get_movie_gross(gross)
+    result = Array.new
+    movies.each do |movie|
+      if movie.gross == gross
+        result << movie
+      end
+    end
+    return result
+  end
+
+  def movies_year(year)
+    # add all movies from year to list
+    result = Array.new
+    movies.each do |movie|
+      if movie.year == year
+        result << movie
+      end
+    end
+    return result
+  end
+
   def actor_insert(actor)
     actors << (actor)
     for m in movies # every movie, if actor in movie add actor to movie connections
@@ -75,17 +137,6 @@ class Graph
       end
     end
     return nil
-  end
-
-  def movies_year(year)
-    # add all movies from year to list
-    result = Array.new
-    for m in movies
-      if m.year == year
-        result << m
-      end
-    end
-    return result
   end
 
   def actors_year(year)

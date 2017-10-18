@@ -10,6 +10,17 @@ class APITest < Test::Unit::TestCase
     Sinatra::Application
   end
 
+  def test_get_actor
+    result = put '/actors?name="Bruce"'
+    assert last_response.status == 200
+    assert result.body
+  end
+
+  def test_gett_movie
+    result = put '/movies?name="Pulp"'
+    assert last_response.status == 200
+    assert result.body
+  end
 
   def test_put_actor
     json_payload = '{"total_gross":500}'
