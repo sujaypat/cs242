@@ -7,20 +7,21 @@ class Graph
   attr_accessor :actors
   attr_accessor :actor_set
   attr_accessor :movie_set
+  attr_accessor :all_json
 
   def initialize(filename)
     @actor_set = Set.new
     @movie_set = Set.new
     @movies = Array.new
     @actors = Array.new
-    read_json(filename)
+    read_json('/Users/Sujay/Documents/cs242/Assignment2.1/' + filename)
   end
 
   def actor_insert(actor)
     actors << (actor)
     for m in movies # every movie, if actor in movie add actor to movie connections
         # and add movie to actor's connections
-      if m.actor_connections.contains? actor.name
+      if m.actor_connections.include? actor.name
         actor.movie_connections << m
       end
     end
@@ -30,7 +31,7 @@ class Graph
     movies << (movie)
     for a in actors # every movie, if actor in movie add actor to movie connections
       # and add movie to actor's connections
-      if a.movie_connections.contains? movie.title
+      if a.movie_connections.include? movie.title
         movie.actor_connections << a
       end
     end
@@ -129,26 +130,32 @@ class Graph
   end
 
   def analyze_age_gross
-    ages = {}
-    grosses = {}
+    ages = Array.new
+    grosses = Array.new
 
+    actors.each do |actor|
+      ages << actor.age
+      grosses << actor.gross
+    end
 
-    g = Gruff::Line.new('1600x900')
-
+    g = Gruff::Scatter.new('1600x900')
+    g.title = 'age vs gross'
+    g.data('data', ages, grosses)
+    g.write('trends.png')
   end
 
 
 
   def dump_json
-    # puts "dumping json"
-    jsonified_movies = graph.movies.to_json
-    jsonified_actors = graph.actors.to_json
+    jsonified_movies = @graph.movies.to_json
+    jsonified_actors = @graph.actors.to_json
     File.open('../movies.json', 'w'){ |f| f << jsonified_movies}
     File.open('../actors.json', 'w'){ |f| f << jsonified_actors}
   end
 
+
   def read_json(filename)
-    all_json = JSON.parse(File.read('../' + filename))
+    @all_json = JSON.parse(File.read(filename))
     actors = all_json[0]
     movies = all_json[1]
 
@@ -156,18 +163,18 @@ class Graph
       temp_actor = Actor.new(value["name"], value["total_gross"], value["age"])
       value["movies"].each do |movie_title|
         begin
-        temp_movie = Movie.new(movies[movie_title], movies[movie_title]["box_office"], movies[movie_title]["year"])
-        if !@movie_set.include? temp_movie
+        temp_movie = Movie.new(movies[movie_title]["name"], movies[movie_title]["box_office"], movies[movie_title]["year"])
+        found_movie = @movies.find {|mov| mov.title == movies[movie_title]["name"]}
+        if !found_movie
           @movies << temp_movie
           @movie_set << temp_movie
+        else
+          temp_actor.movie_connections << found_movie
+          found_movie.actor_connections << temp_actor
         end
-        temp_actor.movie_connections << temp_movie
-        temp_movie.actor_connections << temp_actor
         rescue => error
-          # puts error
         end
       end
-      # puts temp_actor.movie_connections.length
       @actors << temp_actor
       @actor_set << temp_actor
     end
@@ -188,6 +195,19 @@ class Movie
     @actor_connections = Array.new
   end
 
+  def to_json
+    repr = {}
+    repr['title'] = @title
+    repr['year'] = @year
+    repr['gross'] = @gross
+    arr = Array.new
+    @actor_connections.each do |actor|
+      arr << actor.name
+    end
+    repr['cast'] = arr
+    return repr.to_json
+  end
+
 end
 
 class Actor
@@ -201,6 +221,19 @@ class Actor
     @age = age
     @gross = gross
     @movie_connections = Array.new
+  end
+
+  def to_json
+    repr = {}
+    repr['name'] = @name
+    repr['age'] = @age
+    repr['gross'] = @gross
+    arr = Array.new
+    @movie_connections.each do |movie|
+      arr << movie.title
+    end
+    repr['movies'] = arr
+    return repr.to_json
   end
 
 end

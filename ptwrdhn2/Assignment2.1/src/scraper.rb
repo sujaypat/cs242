@@ -18,8 +18,7 @@ class Scraper
 
   def initialize(url)
     @logger = ScrapeLog.new('messages.log')
-    @graph = Graph.new
-    read_json('data.json')
+    @graph = Graph.new('data.json')
   end
 
   def scrape

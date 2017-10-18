@@ -19,6 +19,8 @@ GEM
     rack (2.0.3)
     rack-protection (2.0.0)
       rack
+    rack-test (0.7.0)
+      rack (>= 1.0, < 3)
     rmagick (2.16.0)
     simplecov (0.15.1)
       docile (~> 1.1.0)
@@ -47,6 +49,7 @@ DEPENDENCIES
   httparty
   json
   nokogiri
+  rack-test
   simplecov
   sinatra
   test-unit
