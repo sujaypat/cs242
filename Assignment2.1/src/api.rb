@@ -19,6 +19,7 @@ get '/actors' do
       elsif parts[0] == "gross"
         temp |= graph.get_actor_gross(parts[1])
       elsif parts[0] == "age"
+        puts 'parsing year'
         temp |= graph.get_actor_age(parts[1])
       end
     end
