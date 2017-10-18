@@ -29,9 +29,11 @@ class Graph
   end
 
   def get_actor_age(age)
+    age = age.to_i
     result = Array.new
     actors.each do |actor|
       if actor.age == age
+        puts "found match"
         result << actor
       end
     end

@@ -18,7 +18,7 @@ class APITest < Test::Unit::TestCase
 
   def test_gett_movie
     result = put '/movies?name="Pulp"'
-    assert last_response.status 
+    assert last_response.status
     assert result.body
   end
 
