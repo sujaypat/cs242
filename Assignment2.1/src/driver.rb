@@ -5,6 +5,7 @@ class Driver
       graph = Graph.new('data.json')
       graph.analyze_hub
       graph.analyze_age_gross
+      puts graph.get_actor_name("Bruce Willis")[0].to_json
 
   end
 
