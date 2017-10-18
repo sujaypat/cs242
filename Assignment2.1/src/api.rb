@@ -1,4 +1,5 @@
 require 'sinatra'
+require 'json'
 require_relative './graph.rb'
 
 graph = Graph.new('data.json')
@@ -6,47 +7,127 @@ graph = Graph.new('data.json')
 
 get '/actors' do
   puts request.query_string
-  # attr = params['splat'][0]
-  # val = params['splat'][1]
-  # graph.actors.each do |actor|
-  #   if actor.attr == val
-  #
-  #   end
-  # end
 end
 
 get '/movies?' do
-
+  puts request.query_string
 end
 
-get '/actors/' do
-
+get '/actors/:name' do
+  # loop through actors list until we find this name and print all data fields
+  graph.actors.each do |actor|
+    if actor.name.casecmp(params['name'].gsub(/_/, ' ')) == 0
+      status 200
+      return actor.to_json
+    end
+  end
+  status 404
 end
 
-get '/movies/' do
-
+get '/movies/:title' do
+  # loop through movies list until we find this title and print all data fields
+  graph.movies.each do |movie|
+    if movie.title.casecmp(params['title'].gsub(/_/, ' ')) == 0
+      status 200
+      return movie.to_json
+    end
+  end
+  status 404
 end
 
-put '/actors' do
-
+put '/actors/:name' do
+  # find name and update relevant data field
+  request_payload = JSON.parse(request.body.read)
+  graph.actors.each do |actor|
+    if actor.name.casecmp(params['name'].gsub(/_/, ' ')) == 0
+      begin
+        name = request_payload['name']
+        gross = request_payload['total_gross']
+        age = request_payload['age']
+        actor.name = name ? name : actor.name
+        actor.gross = gross ? gross : actor.gross
+        actor.age = age ? age : actor.age
+        status 200
+        return
+      end
+    end
+  end
+  status 404
 end
 
-put '/movies' do
+put '/movies/:title' do
+  # find title and update relevant data field
+  request_payload = JSON.parse(request.body.read)
+  graph.movies.each do |movie|
+    if movie.title.casecmp(params['title'].gsub(/_/, ' ')) == 0
+      begin
+        title = request_payload['title']
+        gross = request_payload['box_office']
+        year = request_payload['year']
+        movie.title = title ? title : movie.title
+        movie.gross = gross ? gross : movie.gross
+        movie.year = year ? year : movie.year
+        status 200
+        return
+      end
+    end
+  end
+  status 404
 
 end
 
 post '/actors' do
-
+  request_payload = JSON.parse(request.body.read)
+  begin
+    name = request_payload['name']
+    gross = request_payload['total_gross']
+    age = request_payload['age']
+    new_actor = Actor.new(name|'', gross|0, age|0)
+    @actors << new_actor
+    @actor_set << new_actor
+    status 201
+    return
+  end
+  status 400
 end
 
 post '/movies' do
-
+  request_payload = JSON.parse(request.body.read)
+  begin
+    title = request_payload['title']
+    box_office = request_payload['box_office']
+    year = request_payload['year']
+    new_movie = Actor.new(title|'', box_office|0, year|0)
+    @movies << new_movie
+    @movie_set << new_movie
+    status 201
+    return
+  end
+  status 400
 end
 
-delete '/actors' do
-
+delete '/actors/:name' do
+  # loop through, find and delete actor
+  graph.actor_set.each do |actor|
+    if actor.name.casecmp(params['name'].gsub(/_/, ' ')) == 0
+      graph.actors.delete(actor)
+      graph.actor_set.delete(actor)
+      status 200
+      return
+    end
+  end
+  status 404
 end
 
-delete '/movies' do
-
+delete '/movies/:title' do
+  # loop through, find and delete movie
+  graph.movie_set.each do |movie|
+    if movie.title.casecmp(params['title'].gsub(/_/, ' ')) == 0
+      graph.movies.delete(movie)
+      graph.movie_set.delete(movie)
+      status 200
+      return
+    end
+  end
+  status 404
 end

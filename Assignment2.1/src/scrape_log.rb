@@ -6,7 +6,7 @@ class ScrapeLog
   # open/create the file
   def initialize(filename)
     @@filename = filename
-    File.open('../' + filename, 'a')
+    File.open('../' + filename, 'w')
   end
 
 
