@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "35AA00A01F993EC100973652"
+               BlueprintIdentifier = "352DC0C21F994DD400B9678D"
                BuildableName = "GitHub Viewer.app"
                BlueprintName = "GitHub Viewer"
                ReferencedContainer = "container:GitHub Viewer.xcodeproj">
@@ -32,7 +32,7 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "35AA00B41F993EC200973652"
+               BlueprintIdentifier = "352DC0D81F994DD400B9678D"
                BuildableName = "GitHub ViewerTests.xctest"
                BlueprintName = "GitHub ViewerTests"
                ReferencedContainer = "container:GitHub Viewer.xcodeproj">
@@ -42,7 +42,7 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "35AA00BF1F993EC200973652"
+               BlueprintIdentifier = "352DC0E31F994DD400B9678D"
                BuildableName = "GitHub ViewerUITests.xctest"
                BlueprintName = "GitHub ViewerUITests"
                ReferencedContainer = "container:GitHub Viewer.xcodeproj">
@@ -52,7 +52,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "35AA00A01F993EC100973652"
+            BlueprintIdentifier = "352DC0C21F994DD400B9678D"
             BuildableName = "GitHub Viewer.app"
             BlueprintName = "GitHub Viewer"
             ReferencedContainer = "container:GitHub Viewer.xcodeproj">
@@ -75,7 +75,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "35AA00A01F993EC100973652"
+            BlueprintIdentifier = "352DC0C21F994DD400B9678D"
             BuildableName = "GitHub Viewer.app"
             BlueprintName = "GitHub Viewer"
             ReferencedContainer = "container:GitHub Viewer.xcodeproj">
@@ -94,7 +94,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "35AA00A01F993EC100973652"
+            BlueprintIdentifier = "352DC0C21F994DD400B9678D"
             BuildableName = "GitHub Viewer.app"
             BlueprintName = "GitHub Viewer"
             ReferencedContainer = "container:GitHub Viewer.xcodeproj">
