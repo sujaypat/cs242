@@ -49,7 +49,7 @@ class ReposViewController: UITableViewController {
             let name = repo["name"].stringValue
             let owner = repo["owner"]["login"].stringValue
             let description = repo["description"].string ?? "No description provided"
-            let url = URL(string: repo["url"].stringValue)
+            let url = URL(string: repo["html_url"].stringValue)
             
             let cell = Repo(repoName: name, userName: owner, description: description, url: url!)
             repos.append(cell)
@@ -62,6 +62,10 @@ class ReposViewController: UITableViewController {
         return repos.count
     }
     
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         let repo = repos[indexPath.row]
@@ -71,21 +75,8 @@ class ReposViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let destination = repos[indexPath.row].url;
-        let request = URLRequest (url: destination)
-        self.webView.frame = self.view.frame;
-        
-        self.webView.loadRequest(request)
-        
-    }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "showDetail" {
-            if let indexPath = self.tableView.indexPathForSelectedRow {
-                let controller = segue.destination as! NewWebViewController
-//                controller.selectedName = repos[indexPath.row]
-            }
-        }
+        tableView.deselectRow(at: indexPath, animated: false)
+        UIApplication.shared.openURL(repos[indexPath.row].url)
     }
 
 }

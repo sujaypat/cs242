@@ -11,7 +11,7 @@ import Foundation
 import Alamofire
 import SwiftyJSON
 
-let USER : String = "https://api.github.com/users/sujaypat";
+let USER : String = "https://api.github.com/users/redsn0w422";
 
 class ProfileViewController: UIViewController {
     
@@ -44,7 +44,7 @@ class ProfileViewController: UIViewController {
             switch response.result {
             case .success(let value):
                 self.json = JSON(value)
-                print("JSON: \(self.json)")
+//                print("JSON: \(self.json)")
                 self.downloadImage(url: URL(string: self.json["avatar_url"].stringValue)!)
                 self.actualName.text = self.json["name"].stringValue
                 self.userName.text = self.json["login"].stringValue
