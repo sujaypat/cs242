@@ -44,7 +44,7 @@ class FollowersViewController: UITableViewController {
         let repoArray = self.json.arrayValue
         for repo in repoArray {
             let name = repo["login"].stringValue
-            let url = URL(string: repo["url"].stringValue)
+            let url = URL(string: repo["html_url"].stringValue)
             let imgURL = URL(string: repo["avatar_url"].stringValue)
             let cell = Person(userName: name, url: url!, img: imgURL!)
             people.append(cell)
