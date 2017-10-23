@@ -12,6 +12,8 @@ import SwiftyJSON
 
 class ReposViewController: UITableViewController {
     
+    @IBOutlet weak var webView : UIWebView!
+    
     struct Repo {
         let repoName : String
         let userName : String
@@ -20,13 +22,12 @@ class ReposViewController: UITableViewController {
     }
     var repos = [Repo]()
     var json : JSON = JSON.null;
-    var user : String = "https://api.github.com/users/sujaypat/repos";
+    var user : String = USER + "/repos";
 
 
-    func viewWillAppear() {
-//        super.viewWillAppear()
+    override func viewDidLoad() {
+        super.viewDidLoad()
         getUserData(url: user)
-        parseJSON()
     }
 
     func getUserData(url: String) {
@@ -35,6 +36,7 @@ class ReposViewController: UITableViewController {
             case .success(let value):
                 self.json = JSON(value)
                 print("JSON: \(self.json)")
+                self.parseJSON()
             case .failure(let error):
                 print(error)
             }
@@ -66,6 +68,24 @@ class ReposViewController: UITableViewController {
         cell.textLabel!.text = repo.repoName
         cell.detailTextLabel?.text = repo.description
         return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let destination = repos[indexPath.row].url;
+        let request = URLRequest (url: destination)
+        self.webView.frame = self.view.frame;
+        
+        self.webView.loadRequest(request)
+        
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "showDetail" {
+            if let indexPath = self.tableView.indexPathForSelectedRow {
+                let controller = segue.destination as! NewWebViewController
+//                controller.selectedName = repos[indexPath.row]
+            }
+        }
     }
 
 }
