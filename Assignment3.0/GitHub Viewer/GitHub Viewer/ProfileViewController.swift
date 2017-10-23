@@ -11,7 +11,7 @@ import Foundation
 import Alamofire
 import SwiftyJSON
 
-let USER : String = "https://api.github.com/users/redsn0w422";
+let USER : String = "https://api.github.com/users/sujaypat";
 
 class ProfileViewController: UIViewController {
     
