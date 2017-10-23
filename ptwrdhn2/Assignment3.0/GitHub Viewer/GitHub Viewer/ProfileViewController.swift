@@ -11,10 +11,11 @@ import Foundation
 import Alamofire
 import SwiftyJSON
 
+let USER : String = "https://api.github.com/users/sujaypat";
+
 class ProfileViewController: UIViewController {
     
     var json : JSON = JSON.null;
-    var user : String = "https://api.github.com/users/sujaypat";
     @IBOutlet weak var avatar: UIImageView!
     @IBOutlet weak var actualName: UILabel!
     @IBOutlet weak var userName: UILabel!
@@ -29,7 +30,7 @@ class ProfileViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        getUserData(url: user)
+        getUserData(url: USER)
         
     }
 
