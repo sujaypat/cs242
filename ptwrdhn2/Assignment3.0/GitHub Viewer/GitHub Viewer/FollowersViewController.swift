@@ -15,6 +15,7 @@ class FollowersViewController: UITableViewController {
     struct Person {
         let userName : String
         let url : URL
+        let img : URL
     }
     var people = [Person]()
     var json : JSON = JSON.null;
@@ -31,7 +32,7 @@ class FollowersViewController: UITableViewController {
             switch response.result {
             case .success(let value):
                 self.json = JSON(value)
-                print("JSON: \(self.json)")
+//                print("JSON: \(self.json)")
                 self.parseJSON()
             case .failure(let error):
                 print(error)
@@ -44,8 +45,8 @@ class FollowersViewController: UITableViewController {
         for repo in repoArray {
             let name = repo["login"].stringValue
             let url = URL(string: repo["url"].stringValue)
-            
-            let cell = Person(userName: name, url: url!)
+            let imgURL = URL(string: repo["avatar_url"].stringValue)
+            let cell = Person(userName: name, url: url!, img: imgURL!)
             people.append(cell)
         }
         
@@ -59,8 +60,14 @@ class FollowersViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         let person = people[indexPath.row]
+        cell.imageView!.image = UIImage(data: try! Data(contentsOf: person.img))
         cell.textLabel!.text = person.userName
         return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: false)
+        UIApplication.shared.openURL(people[indexPath.row].url)
     }
 
 }
