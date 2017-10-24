@@ -212,6 +212,9 @@
                     </tableView>
                     <navigationItem key="navigationItem" title="Following" id="LhE-Mf-kkl"/>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
+                    <connections>
+                        <segue destination="9pv-A4-QxB" kind="show" identifier="showProfileView" id="QiU-6M-BCh"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="E8U-bn-TLC" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -251,6 +254,9 @@
                     </tableView>
                     <navigationItem key="navigationItem" title="Followers" id="vF7-e6-DQr"/>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
+                    <connections>
+                        <segue destination="9pv-A4-QxB" kind="show" identifier="showProfileView" id="vv7-V8-40h"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="OQG-TY-I5h" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -360,4 +366,7 @@
         <image name="profile" width="23" height="23"/>
         <image name="repo" width="23" height="23"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="vv7-V8-40h"/>
+    </inferredMetricsTieBreakers>
 </document>
