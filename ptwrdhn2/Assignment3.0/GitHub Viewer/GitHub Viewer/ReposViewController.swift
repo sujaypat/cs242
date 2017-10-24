@@ -9,6 +9,7 @@
 import UIKit
 import Alamofire
 import SwiftyJSON
+import SafariServices
 
 class ReposViewController: UITableViewController {
     
@@ -76,7 +77,8 @@ class ReposViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
-        UIApplication.shared.openURL(repos[indexPath.row].url)
+        let view = SFSafariViewController(url: repos[indexPath.row].url)
+        self.present(view, animated: true, completion: nil)
     }
 
 }

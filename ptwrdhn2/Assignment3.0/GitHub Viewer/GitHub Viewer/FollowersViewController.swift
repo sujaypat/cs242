@@ -9,6 +9,7 @@
 import UIKit
 import Alamofire
 import SwiftyJSON
+import SafariServices
 
 class FollowersViewController: UITableViewController {
 
@@ -67,7 +68,8 @@ class FollowersViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
-        UIApplication.shared.openURL(people[indexPath.row].url)
+        let view = SFSafariViewController(url: people[indexPath.row].url)
+        self.present(view, animated: true, completion: nil)
     }
 
 }
