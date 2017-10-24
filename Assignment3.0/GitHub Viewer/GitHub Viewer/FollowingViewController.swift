@@ -68,9 +68,17 @@ class FollowingViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
-        let view = SFSafariViewController(url: people[indexPath.row].url)
-        self.present(view, animated: true, completion: nil)
+//        let view = SFSafariViewController(url: people[indexPath.row].url)
+//        self.present(view, animated: true, completion: nil)
+        performSegue(withIdentifier: "showProfileView", sender: indexPath)
     }
-
+    
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let profileViewController = segue.destination as? ProfileViewController,
+            let indexPath = sender as? IndexPath {
+            profileViewController.username = self.people[indexPath.row].userName
+        }
+    }
 }
 

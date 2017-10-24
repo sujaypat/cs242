@@ -27,10 +27,12 @@ class ProfileViewController: UIViewController {
     @IBOutlet weak var following: UIButton!
     @IBOutlet weak var created: UILabel!
     
+    var username = "sujaypat"
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        getUserData(url: USER)
+        getUserData(url: "https://api.github.com/users/\(self.username)")
         
     }
 
