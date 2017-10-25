@@ -27,7 +27,8 @@ class ProfileViewController: UIViewController {
     @IBOutlet weak var following: UIButton!
     @IBOutlet weak var created: UILabel!
     
-    var username = "sujaypat"
+    var username = USER.components(separatedBy: "/").last!
+//    print("username \(self.username)")
     
     override func viewDidLoad() {
         super.viewDidLoad()
