@@ -1,5 +1,5 @@
 //
-//  SecondViewController.swift
+//  FollowingViewController.swift
 //  GitHub Viewer
 //
 //  Created by Sujay Patwardhan on 10/19/17.
@@ -68,9 +68,22 @@ class FollowingViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
-//        let view = SFSafariViewController(url: people[indexPath.row].url)
-//        self.present(view, animated: true, completion: nil)
         performSegue(withIdentifier: "showProfileView", sender: indexPath)
+    }
+    
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    
+    override func tableView(_ tableView: UITableView, editActionsForRowAt: IndexPath) -> [UITableViewRowAction]? {
+//        let starred =
+        let unfollow = UITableViewRowAction(style: .normal, title: "Unfollow") { action, index in
+            print("share button tapped")
+        }
+        unfollow.backgroundColor = .red
+        
+        
+        return [unfollow]
     }
     
     

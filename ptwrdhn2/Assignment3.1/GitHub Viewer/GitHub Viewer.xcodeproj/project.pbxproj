@@ -18,6 +18,9 @@
 		352DC0D31F994DD400B9678D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 352DC0D11F994DD400B9678D /* LaunchScreen.storyboard */; };
 		352DC0DE1F994DD400B9678D /* GitHub_ViewerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 352DC0DD1F994DD400B9678D /* GitHub_ViewerTests.swift */; };
 		352DC0E91F994DD400B9678D /* GitHub_ViewerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 352DC0E81F994DD400B9678D /* GitHub_ViewerUITests.swift */; };
+		3556EF431FA3B69000CD9815 /* GiHubViewer.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 3556EF411FA3B69000CD9815 /* GiHubViewer.xcdatamodeld */; };
+		3556EF441FA3B69000CD9815 /* GiHubViewer.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 3556EF411FA3B69000CD9815 /* GiHubViewer.xcdatamodeld */; };
+		3556EF451FA3B69000CD9815 /* GiHubViewer.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 3556EF411FA3B69000CD9815 /* GiHubViewer.xcdatamodeld */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,6 +58,7 @@
 		352DC0E41F994DD400B9678D /* GitHub ViewerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "GitHub ViewerUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		352DC0E81F994DD400B9678D /* GitHub_ViewerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHub_ViewerUITests.swift; sourceTree = "<group>"; };
 		352DC0EA1F994DD400B9678D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3556EF421FA3B69000CD9815 /* GiHubViewer.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = GiHubViewer.xcdatamodel; sourceTree = "<group>"; };
 		E7E8D98C08DDF20C91C7E090 /* Pods-GitHub Viewer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GitHub Viewer.debug.xcconfig"; path = "../Pods/Target Support Files/Pods-GitHub Viewer/Pods-GitHub Viewer.debug.xcconfig"; sourceTree = "<group>"; };
 		FFF7CD55D6A68B317F4E69A3 /* Pods-GitHub Viewer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GitHub Viewer.release.xcconfig"; path = "../Pods/Target Support Files/Pods-GitHub Viewer/Pods-GitHub Viewer.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -88,6 +92,7 @@
 		352DC0BA1F994DD400B9678D = {
 			isa = PBXGroup;
 			children = (
+				3556EF411FA3B69000CD9815 /* GiHubViewer.xcdatamodeld */,
 				352DC0C51F994DD400B9678D /* GitHub Viewer */,
 				352DC0DC1F994DD400B9678D /* GitHub ViewerTests */,
 				352DC0E71F994DD400B9678D /* GitHub ViewerUITests */,
@@ -317,11 +322,13 @@
 			inputPaths = (
 				"${SRCROOT}/../Pods/Target Support Files/Pods-GitHub Viewer/Pods-GitHub Viewer-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
+				"${BUILT_PRODUCTS_DIR}/OAuthSwift/OAuthSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/SwiftyJSON/SwiftyJSON.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/OAuthSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyJSON.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -357,6 +364,7 @@
 				35122D241F9D4E86001C92EA /* FollowersViewController.swift in Sources */,
 				35122D261F9D4E8E001C92EA /* FollowingViewController.swift in Sources */,
 				352DC0CB1F994DD400B9678D /* ReposViewController.swift in Sources */,
+				3556EF431FA3B69000CD9815 /* GiHubViewer.xcdatamodeld in Sources */,
 				352DC0C71F994DD400B9678D /* AppDelegate.swift in Sources */,
 				352DC0C91F994DD400B9678D /* ProfileViewController.swift in Sources */,
 			);
@@ -367,6 +375,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				352DC0DE1F994DD400B9678D /* GitHub_ViewerTests.swift in Sources */,
+				3556EF441FA3B69000CD9815 /* GiHubViewer.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -375,6 +384,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				352DC0E91F994DD400B9678D /* GitHub_ViewerUITests.swift in Sources */,
+				3556EF451FA3B69000CD9815 /* GiHubViewer.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -634,6 +644,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		3556EF411FA3B69000CD9815 /* GiHubViewer.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				3556EF421FA3B69000CD9815 /* GiHubViewer.xcdatamodel */,
+			);
+			currentVersion = 3556EF421FA3B69000CD9815 /* GiHubViewer.xcdatamodel */;
+			path = GiHubViewer.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 352DC0BB1F994DD400B9678D /* Project object */;
 }
