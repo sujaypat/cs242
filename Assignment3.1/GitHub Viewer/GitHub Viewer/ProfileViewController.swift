@@ -1,5 +1,5 @@
 //
-//  FirstViewController.swift
+//  ProfileViewController.swift
 //  GitHub Viewer
 //
 //  Created by Sujay Patwardhan on 10/19/17.
@@ -10,6 +10,8 @@ import UIKit
 import Foundation
 import Alamofire
 import SwiftyJSON
+import OAuthSwift
+import CoreData
 
 let USER : String = "https://api.github.com/users/sujaypat";
 
@@ -27,13 +29,12 @@ class ProfileViewController: UIViewController {
     @IBOutlet weak var following: UIButton!
     @IBOutlet weak var created: UILabel!
     
-    var username = "sujaypat"
+    var username = USER.components(separatedBy: "/").last!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         getUserData(url: "https://api.github.com/users/\(self.username)")
-        
     }
 
     override func didReceiveMemoryWarning() {
@@ -41,6 +42,7 @@ class ProfileViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+ 
     func getUserData(url: String) {
         Alamofire.request(url, method: .get).validate().responseJSON { response in
             switch response.result {

@@ -1,5 +1,5 @@
 //
-//  SecondViewController.swift
+//  ReposViewController.swift
 //  GitHub Viewer
 //
 //  Created by Sujay Patwardhan on 10/19/17.
@@ -79,6 +79,20 @@ class ReposViewController: UITableViewController {
         tableView.deselectRow(at: indexPath, animated: false)
         let view = SFSafariViewController(url: repos[indexPath.row].url)
         self.present(view, animated: true, completion: nil)
+    }
+    
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    
+    override func tableView(_ tableView: UITableView, editActionsForRowAt: IndexPath) -> [UITableViewRowAction]? {
+//        let starred =
+        let star = UITableViewRowAction(style: .normal, title: "Star/Unstar") { action, index in
+            print("share button tapped")
+        }
+        star.backgroundColor = .blue
+        
+        return [star]
     }
 
 }
