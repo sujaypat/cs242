@@ -1,12 +1,10 @@
 PODS:
-  - Alamofire (4.5.1)
+  - APIManager (0.0.5)
   - OAuthSwift (1.1.2)
-  - SwiftyJSON (3.1.4)
 
 DEPENDENCIES:
-  - Alamofire (~> 4.5)
+  - APIManager
   - OAuthSwift (from `https://github.com/OAuthSwift/OAuthSwift.git`, branch `swift3`)
-  - SwiftyJSON
 
 EXTERNAL SOURCES:
   OAuthSwift:
@@ -19,10 +17,9 @@ CHECKOUT OPTIONS:
     :git: https://github.com/OAuthSwift/OAuthSwift.git
 
 SPEC CHECKSUMS:
-  Alamofire: 2d95912bf4c34f164fdfc335872e8c312acaea4a
+  APIManager: 8f54a4a3f21d93068fd5e0e06b0ae6c011be29b5
   OAuthSwift: a4e5e5563971918dbfb9701aff6db0bf278d0ada
-  SwiftyJSON: c2842d878f95482ffceec5709abc3d05680c0220
 
-PODFILE CHECKSUM: e5b16bb5c7103ef3c45194fc487f7ae4f2bc2c2b
+PODFILE CHECKSUM: 6e64d55f185bf4c92a4ad90f9a1411529818b5e2
 
 COCOAPODS: 1.3.1

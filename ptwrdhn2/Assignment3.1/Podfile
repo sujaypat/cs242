@@ -3,7 +3,10 @@ platform :ios, '10.0'
 use_frameworks!
 project './GitHub Viewer/Github Viewer.xcodeproj'
 target 'GitHub Viewer' do
-    pod 'Alamofire', '~> 4.5'
-	pod 'SwiftyJSON'
-	pod 'OAuthSwift', :git => 'https://github.com/OAuthSwift/OAuthSwift.git', :branch => 'swift3'
+    pod 'OAuthSwift', :git => 'https://github.com/OAuthSwift/OAuthSwift.git', :branch => 'swift3'
+    pod 'APIManager'
+end
+target 'GitHub ViewerUITests' do
+    pod 'OAuthSwift', :git => 'https://github.com/OAuthSwift/OAuthSwift.git', :branch => 'swift3'
+    pod 'APIManager'
 end
