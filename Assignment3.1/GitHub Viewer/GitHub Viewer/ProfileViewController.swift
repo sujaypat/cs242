@@ -8,16 +8,14 @@
 
 import UIKit
 import Foundation
-import Alamofire
-import SwiftyJSON
 import OAuthSwift
 import CoreData
 
-let USER : String = "https://api.github.com/users/sujaypat";
+let USER: String = "sujaypat"
 
 class ProfileViewController: UIViewController {
-    
-    var json : JSON = JSON.null;
+
+    // connections to all the interface elements
     @IBOutlet weak var avatar: UIImageView!
     @IBOutlet weak var actualName: UILabel!
     @IBOutlet weak var userName: UILabel!
@@ -33,8 +31,32 @@ class ProfileViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
-        getUserData(url: "https://api.github.com/users/\(self.username)")
+
+        GithubService.getUser(byName: username)
+        .onSuccess { (json) in
+            guard let json = json as? [String: Any] else { return }
+
+            self.downloadImage(url: URL(string: json["avatar_url"] as! String)! )
+
+            DispatchQueue.main.async() {
+                // populate the labels on the profile page
+                self.actualName.text = json["name"]  as? String ?? ""
+                self.userName.text   = json["login"] as? String ?? ""
+                self.bio.text        = json["bio"]   as? String ?? "No bio provided :("
+                self.website.text    = json["blog"]  as? String ?? "No website provided :("
+                self.email.text      = json["email"] as? String ?? "No public email :("
+                self.created.text    = "created on: " + (json["created_at"] as? String ?? "")
+
+                // populate button labels
+                self.repos.setTitle("\(json["public_repos"] as? Int ?? 0) public repos", for: .normal)
+                self.followers.setTitle("Followers: \(json["followers"] as? Int ?? 0)",  for: .normal)
+                self.following.setTitle("Following: \(json["following"] as? Int ?? 0)",  for: .normal)
+            }
+        }
+        .onFailure { (reason: String) in
+            print(reason)
+        }
+        .perform(withAuthorization: nil)
     }
 
     override func didReceiveMemoryWarning() {
@@ -42,40 +64,19 @@ class ProfileViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
- 
-    func getUserData(url: String) {
-        Alamofire.request(url, method: .get).validate().responseJSON { response in
-            switch response.result {
-            case .success(let value):
-                self.json = JSON(value)
-//                print("JSON: \(self.json)")
-                self.downloadImage(url: URL(string: self.json["avatar_url"].stringValue)!)
-                self.actualName.text = self.json["name"].stringValue
-                self.userName.text = self.json["login"].stringValue
-                self.bio.text = self.json["bio"].string ?? "No bio provided :("
-                self.website.text = self.json["blog"].string ?? "No website provided :("
-                self.email.text = self.json["email"].string ?? "No public email :("
-                self.created.text = "created on: " + self.json["created_at"].stringValue
-                self.repos.setTitle((self.json["public_repos"].stringValue + " public repos"), for: .normal)
-                self.followers.setTitle(("Followers: " + self.json["followers"].stringValue), for: .normal)
-                self.following.setTitle(("Following: " + self.json["following"].stringValue), for: .normal)
-            case .failure(let error):
-                print(error)
-            }
-        }
-    }
-    
+    // enable using buttons or tabs to change tabs
     @IBAction func changeTab(sender: UIButton) {
-        let label = sender.currentTitle!
+        guard let tabBarController = tabBarController, let label = sender.currentTitle else { return }
+
         print(label)
-        if label.contains("repos"){
-            super.tabBarController!.selectedIndex = 1;
+        if label.contains("repos") {
+            tabBarController.selectedIndex = 1
         }
-        if label.contains("Following"){
-            super.tabBarController!.selectedIndex = 2;
+        if label.contains("Following") {
+            tabBarController.selectedIndex = 2
         }
-            if label.contains("Followers"){
-            super.tabBarController!.selectedIndex = 3;
+        if label.contains("Followers") {
+            tabBarController.selectedIndex = 3
         }
     }
     
@@ -85,7 +86,7 @@ class ProfileViewController: UIViewController {
     func getDataFromUrl(url: URL, completion: @escaping (Data?, URLResponse?, Error?) -> ()) {
         URLSession.shared.dataTask(with: url) { data, response, error in
             completion(data, response, error)
-            }.resume()
+        }.resume()
     }
     
     func downloadImage(url: URL) {

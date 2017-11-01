@@ -7,93 +7,139 @@
 //
 
 import UIKit
-import Alamofire
-import SwiftyJSON
 import SafariServices
+import APIManager
+import CoreData
 
-class ReposViewController: UITableViewController {
+class ReposViewController: UITableViewController, NSFetchedResultsControllerDelegate {
     
     @IBOutlet weak var webView : UIWebView!
-    
-    struct Repo {
-        let repoName : String
-        let userName : String
-        let description : String
-        let url : URL
+
+    // allows star/unstar button and handles API calls for those actions
+    override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        let reponame = fetchedResultsController.object(at: indexPath).name!
+        let star = UITableViewRowAction(style: .normal, title: "Star/Unstar") { action, index in
+            // if following, unfollows and vice versa
+            GithubService.doesUserHaveStarred(byUsername: USER, repoName: reponame)
+            .onSuccess { _ in
+                GithubService.unstarRepo(byUsername: USER, repoName: reponame)
+                .onFailure { reason in
+                    print(reason)
+                }
+                .perform(withAuthorization: UserModel.shared)
+            }
+            .onFailure { _ in
+                GithubService.starRepo(byUsername: USER, repoName: reponame)
+                .onFailure { reason in
+                    print(reason)
+                }
+                .perform(withAuthorization: UserModel.shared)
+            }
+            .perform(withAuthorization: UserModel.shared)
+            self.tableView.isEditing = false
+        }
+        star.backgroundColor = .blue
+        
+        return [star]
     }
-    var repos = [Repo]()
-    var json : JSON = JSON.null;
-    var user : String = USER + "/repos";
-
-
+    
+    // MARK: CoreData
+    lazy var fetchedResultsController: NSFetchedResultsController<Repo> = {
+        // Create Fetch Request
+        let fetchRequest: NSFetchRequest<Repo> = Repo.fetchRequest()
+        
+        // Configure Fetch Request
+        fetchRequest.sortDescriptors = [
+            NSSortDescriptor(key: "name", ascending: true)
+        ]
+        
+        // Create Fetched Results Controller
+        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: CoreDataManager.shared.persistentContainer.viewContext, sectionNameKeyPath: nil, cacheName: nil)
+        
+        // Configure Fetched Results Controller
+        fetchedResultsController.delegate = self
+        
+        return fetchedResultsController
+    }()
+    
+    
+    // MARK: UIViewController
     override func viewDidLoad() {
         super.viewDidLoad()
-        getUserData(url: user)
-    }
-
-    func getUserData(url: String) {
-        Alamofire.request(url, method: .get).validate().responseJSON { response in
-            switch response.result {
-            case .success(let value):
-                self.json = JSON(value)
-                print("JSON: \(self.json)")
-                self.parseJSON()
-            case .failure(let error):
-                print(error)
-            }
+        do {
+            try fetchedResultsController.performFetch()
+        } catch {
+            fatalError("Failed to launch NSFetchedResultsController.performFetch()")
         }
     }
     
-    func parseJSON(){
-        let repoArray = self.json.arrayValue
-        for repo in repoArray {
-            let name = repo["name"].stringValue
-            let owner = repo["owner"]["login"].stringValue
-            let description = repo["description"].string ?? "No description provided"
-            let url = URL(string: repo["html_url"].stringValue)
-            
-            let cell = Repo(repoName: name, userName: owner, description: description, url: url!)
-            repos.append(cell)
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let profileViewController = segue.destination as? ProfileViewController,
+            let indexPath = sender as? IndexPath {
+            profileViewController.username = fetchedResultsController.object(at: indexPath).userName ?? ""
         }
-        
-        self.tableView.reloadData()
     }
     
-    override func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return repos.count
+    // MARK: UITableViewDatasource
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        guard let fetchedObjects = fetchedResultsController.fetchedObjects else { return 0 }
+        return fetchedObjects.count
     }
     
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-    
+    // create, populate, and use reusable rows
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        let repo = repos[indexPath.row]
-        cell.textLabel!.text = repo.repoName
-        cell.detailTextLabel?.text = repo.description
+        let repo = fetchedResultsController.object(at: indexPath)
+        cell.detailTextLabel?.text = repo.desc
+        cell.textLabel?.text = repo.name
         return cell
     }
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: false)
-        let view = SFSafariViewController(url: repos[indexPath.row].url)
-        self.present(view, animated: true, completion: nil)
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        guard let fetchedObjects = fetchedResultsController.fetchedObjects else { return 0 }
+        return fetchedObjects.count > 0 ? 1 : 0
     }
     
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true
     }
     
-    override func tableView(_ tableView: UITableView, editActionsForRowAt: IndexPath) -> [UITableViewRowAction]? {
-//        let starred =
-        let star = UITableViewRowAction(style: .normal, title: "Star/Unstar") { action, index in
-            print("share button tapped")
-        }
-        star.backgroundColor = .blue
-        
-        return [star]
+    // MARK: UITableViewDelegate
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: false)
+        let view = SFSafariViewController(url: URL(string: fetchedResultsController.object(at: indexPath).url!)!)
+        self.present(view, animated: true, completion: nil)
+
     }
+    
+    // MARK: NSFetchedResultsControllerDelegate
+    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        tableView.beginUpdates()
+    }
+    // handles the possible table row operations
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+        
+        switch type {
+        case .insert:
+            guard let insertIndexPath = newIndexPath else { return }
+            tableView.insertRows(at: [insertIndexPath], with: .fade)
+        case .delete:
+            guard let deleteIndexPath = indexPath else { return }
+            tableView.deleteRows(at: [deleteIndexPath], with: .fade)
+        case .update:
+            guard let updateIndexPath = indexPath else { return }
+            tableView.reloadRows(at: [updateIndexPath], with: .fade)
+        case .move:
+            guard let fromIndexPath = indexPath, let toIndexPath = newIndexPath else { return }
+            tableView.insertRows(at: [toIndexPath],   with: .fade)
+            tableView.deleteRows(at: [fromIndexPath], with: .fade)
+        }
+    }
+    
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        tableView.endUpdates()
+    }
+
 
 }
 

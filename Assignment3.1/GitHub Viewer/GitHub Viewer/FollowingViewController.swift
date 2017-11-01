@@ -7,91 +7,102 @@
 //
 
 import UIKit
-import Alamofire
-import SwiftyJSON
-import SafariServices
+import CoreData
 
-class FollowingViewController: UITableViewController {
-
-    struct Person {
-        let userName : String
-        let url : URL
-        let img : URL
-    }
-    var people = [Person]()
-    var json : JSON = JSON.null;
-    var user : String = USER + "/following";
-    
+class FollowingViewController: PersonListViewController {
     
     override func viewDidLoad() {
+        // only pulls users who are followed by the current user
+        fetchedResultsController.fetchRequest.predicate = NSPredicate(format: "following == YES")
         super.viewDidLoad()
-        getUserData(url: user)
-    }
-    
-    func getUserData(url: String) {
-        Alamofire.request(url, method: .get).validate().responseJSON { response in
-            switch response.result {
-            case .success(let value):
-                self.json = JSON(value)
-//                print("JSON: \(self.json)")
-                self.parseJSON()
-            case .failure(let error):
-                print(error)
-            }
-        }
-    }
-    
-    func parseJSON(){
-        let repoArray = self.json.arrayValue
-        for repo in repoArray {
-            let name = repo["login"].stringValue
-            let url = URL(string: repo["html_url"].stringValue)
-            let imgURL = URL(string: repo["avatar_url"].stringValue)
-            let cell = Person(userName: name, url: url!, img: imgURL!)
-            people.append(cell)
-        }
-        
-        self.tableView.reloadData()
-    }
-    
-    override func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return people.count
-    }
-    
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        let person = people[indexPath.row]
-        cell.imageView!.image = UIImage(data: try! Data(contentsOf: person.img))
-        cell.textLabel!.text = person.userName
-        return cell
-    }
-    
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: false)
-        performSegue(withIdentifier: "showProfileView", sender: indexPath)
     }
     
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true
     }
-    
-    override func tableView(_ tableView: UITableView, editActionsForRowAt: IndexPath) -> [UITableViewRowAction]? {
-//        let starred =
-        let unfollow = UITableViewRowAction(style: .normal, title: "Unfollow") { action, index in
-            print("share button tapped")
-        }
-        unfollow.backgroundColor = .red
+    // allows unfollow and handles API call for unfollowing
+    override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+
+        let person = fetchedResultsController.object(at: indexPath)
+        let username = person.userName!
+        let id = person.id
         
+        let unfollow = UITableViewRowAction(style: .normal, title: "Unfollow", handler: { action, indexPath in
+            GithubService.unfollowUser(target: username)
+            .onSuccess { _ in
+                    DispatchQueue.main.async() {
+                        let fetchRequest = NSFetchRequest<Person>(entityName: "Person")
+                        fetchRequest.predicate = NSPredicate(format: "id == \(id)")
+                        guard let result = try? CoreDataManager.shared.persistentContainer.viewContext.fetch(fetchRequest) else { return }
+                        
+                        var person: Person
+                        switch result.count {
+                        case 1:
+                            person = result[0]
+                            person.following = false
+                        default:
+                            break
+                        }
+                    }
+                }
+            .perform(withAuthorization: UserModel.shared)
+        })
+        unfollow.backgroundColor = .red
         
         return [unfollow]
     }
-    
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if let profileViewController = segue.destination as? ProfileViewController,
-            let indexPath = sender as? IndexPath {
-            profileViewController.username = self.people[indexPath.row].userName
+    // handles creating alert to follow a user
+    @IBAction func follow() {
+        let alert = UIAlertController(title: "Follow", message: "Enter a user to follow", preferredStyle: .alert)
+        
+        alert.addTextField { (textField) in
+            textField.text = ""
         }
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: {_ in
+            alert.dismiss(animated: true, completion: nil)
+        }))
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { [weak alert] (_) in
+            let textField = alert?.textFields![0] // Force unwrapping because we know it exists.
+            let value = textField!.text!
+            print("Text field: \(value)")
+            
+            // follows and then gets data about user to add to table
+            GithubService.followUser(target: value)
+            .onSuccess { _ in
+                GithubService.getUser(byName: value)
+                .onSuccess { (json) in
+                    guard let json = json as? [String: Any] else { return }
+                    DispatchQueue.main.async() {
+                        guard let id = json["id"] as? Int64 else { return }
+                        
+                        let fetchRequest = NSFetchRequest<Person>(entityName: "Person")
+                        fetchRequest.predicate = NSPredicate(format: "id == \(id)")
+                        guard let result = try? CoreDataManager.shared.persistentContainer.viewContext.fetch(fetchRequest) else { return }
+                        
+                        var person: Person
+                        switch result.count {
+                        case 0:
+                            person = Person(context: CoreDataManager.shared.persistentContainer.viewContext)
+                            person.follower = false
+                        case 1:
+                            person = result[0]
+                        default:
+                            fatalError("Internal error")
+                        }
+                        
+                        person.id        = id
+                        person.following = true
+                        person.imgURL    = json["avatar_url"] as? String ?? ""
+                        person.url       = json["html_url"]   as? String ?? ""
+                        person.userName  = json["login"]      as? String ?? ""
+                    }
+                }
+                .perform(withAuthorization: UserModel.shared)
+            }
+            .perform(withAuthorization: UserModel.shared)
+            
+        }))
+        
+        self.present(alert, animated: true, completion: nil)
     }
 }
-
