@@ -1,12 +1,16 @@
 source 'https://github.com/CocoaPods/Specs.git'
-platform :ios, '10.0'
+platform :ios, '11.0'
 use_frameworks!
 project './GitHub Viewer/Github Viewer.xcodeproj'
 target 'GitHub Viewer' do
-    pod 'OAuthSwift', :git => 'https://github.com/OAuthSwift/OAuthSwift.git', :branch => 'swift3'
-    pod 'APIManager'
+    pod 'OAuthSwift', :git => 'https://github.com/OAuthSwift/OAuthSwift.git'
+    pod 'SwiftyJSON'
+	pod 'APIManager', '~> 0.1'
+	pod 'Charts'
 end
 target 'GitHub ViewerTests' do
-    pod 'OAuthSwift', :git => 'https://github.com/OAuthSwift/OAuthSwift.git', :branch => 'swift3'
-    pod 'APIManager'
+    pod 'OAuthSwift', :git => 'https://github.com/OAuthSwift/OAuthSwift.git'
+    pod 'SwiftyJSON'
+	pod 'APIManager', '~> 0.1'
+	pod 'Charts'
 end

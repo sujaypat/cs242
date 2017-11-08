@@ -16,12 +16,14 @@
     <entity name="Repo" representedClassName="Repo" syncable="YES" codeGenerationType="class">
         <attribute name="desc" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="numStars" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="url" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="userName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="views" attributeType="Transformable" customClassName="NSMutableArray" syncable="YES"/>
     </entity>
     <elements>
         <element name="Notification" positionX="-9" positionY="81" width="128" height="90"/>
         <element name="Person" positionX="-36" positionY="9" width="128" height="133"/>
-        <element name="Repo" positionX="9" positionY="99" width="128" height="105"/>
+        <element name="Repo" positionX="9" positionY="99" width="128" height="135"/>
     </elements>
 </model>

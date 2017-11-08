@@ -16,7 +16,7 @@ class UserModel: APIAuthorization {
     
     var key: String?
     
-    func embedInto<Service : APIService>(request: APIRequest<Service>) -> (HTTPParameters?, JSON?) {
+    func embedInto<Service, ReturnType>(request: APIRequest<Service, ReturnType>) -> (HTTPParameters?, HTTPBody?) {
         var params = request.params ?? [:]
         params["access_token"] = key
         return (params, request.body)

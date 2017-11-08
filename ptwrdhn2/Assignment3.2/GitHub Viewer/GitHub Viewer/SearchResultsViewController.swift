@@ -71,17 +71,15 @@ class SearchResultsViewController: UITableViewController, UISearchBarDelegate {
             GithubService.searchForRepo(params: ["q": searchController.searchBar.text!.lowercased(), "per_page": "10", "sort": "stars", "order": (searchController.searchBar.selectedScopeButtonIndex == 0 ? "asc" : "desc")])
             .onSuccess { (json) in
                 self.repos.removeAll()
-                guard let json = json as? [String: Any] else { return }
                 
                 DispatchQueue.main.async() {
 
-                    for item in (json["items"] as! [[String: Any]]) {
+                    for item in json["items"].arrayValue {
 
-                        guard let name = item["name"] as? String else { continue }
+                        guard let name = item["name"].string else { continue }
 
-                        let desc     = item["description"] as? String ?? "No description provided"
-                        let url      = item["html_url"]    as? String ?? ""
-
+                        let desc     = item["description"].string ?? "No description provided"
+                        let url      = item["html_url"].stringValue
 
                         self.repos.append(repoResult(desc: desc, name: name, url: url))
                     }
@@ -97,17 +95,17 @@ class SearchResultsViewController: UITableViewController, UISearchBarDelegate {
             GithubService.searchForUser(params: ["q": searchController.searchBar.text!.lowercased(), "per_page": "10", "sort": "followers", "order": (searchController.searchBar.selectedScopeButtonIndex == 2 ? "asc" : "desc")])
             .onSuccess { (json) in
                 self.users.removeAll()
-                guard let json = json as? [String: Any] else { return }
 
                 DispatchQueue.main.async() {
                 
-                    for item in (json["items"] as! [[String: Any]]) {
-
-                        guard let id = item["id"] as? Int64 else { continue }
+                    for item in json["items"].arrayValue {
                         
-                        let imgURL    = item["avatar_url"] as? String ?? ""
-                        let url       = item["html_url"]   as? String ?? ""
-                        let userName  = item["login"]      as? String ?? ""
+                        guard let intId = item["id"].int else { continue }
+                        let id = Int64(intId)
+                        
+                        let imgURL    = item["avatar_url"].stringValue
+                        let url       = item["html_url"].stringValue
+                        let userName  = item["login"].stringValue
                         
                         self.users.append(userResult(id: id, imgURL: imgURL, url: url, userName: userName))
                     }

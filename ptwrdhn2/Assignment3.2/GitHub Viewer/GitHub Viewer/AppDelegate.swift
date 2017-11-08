@@ -9,6 +9,7 @@
 import UIKit
 import CoreData
 import OAuthSwift
+import SwiftyJSON
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -71,12 +72,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func authorizedRequests() {
         GithubService.getFollowers(byName: USER)
         .onSuccess{ (json) in
-            guard let json = json as? [[String: Any]] else { return }
             
             DispatchQueue.main.async {
                 
-                for item in json {
-                    guard let id = item["id"] as? Int64 else { continue }
+                for item in json.arrayValue {
+                    guard let intId = item["id"].int else { continue }
+                    let id = Int64(intId)
                     
                     let fetchRequest = NSFetchRequest<Person>(entityName: "Person")
                     fetchRequest.predicate = NSPredicate(format: "id == \(id)")
@@ -95,9 +96,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     
                     person.id       = id
                     person.follower = true
-                    person.imgURL   = item["avatar_url"] as? String ?? ""
-                    person.url      = item["html_url"]   as? String ?? ""
-                    person.userName = item["login"]      as? String ?? ""
+                    person.imgURL   = item["avatar_url"].stringValue
+                    person.url      = item["html_url"].stringValue
+                    person.userName = item["login"].stringValue
                 }
             }
         }
@@ -109,13 +110,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         GithubService.getFollowing(byName: USER)
         .onSuccess{ (json) in
-            guard let json = json as? [[String: Any]] else { return }
             
             DispatchQueue.main.async {
                 
-                for item in json {
-                    guard let id = item["id"] as? Int64 else { continue }
-                    
+                for item in json.arrayValue {
+                    guard let intId = item["id"].int else { continue }
+                    let id = Int64(intId)
+
                     let fetchRequest = NSFetchRequest<Person>(entityName: "Person")
                     fetchRequest.predicate = NSPredicate(format: "id == \(id)")
                     guard let result = try? CoreDataManager.shared.persistentContainer.viewContext.fetch(fetchRequest) else { continue }
@@ -133,9 +134,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     
                     person.id        = id
                     person.following = true
-                    person.imgURL    = item["avatar_url"] as? String ?? ""
-                    person.url       = item["html_url"]   as? String ?? ""
-                    person.userName  = item["login"]      as? String ?? ""
+                    person.imgURL    = item["avatar_url"].stringValue
+                    person.url       = item["html_url"].stringValue
+                    person.userName  = item["login"].stringValue
                 }
             }
         }
@@ -146,12 +147,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         GithubService.getRepos(byName: USER)
         .onSuccess { (json) in
-            guard let json = json as? [[String: Any]] else { return }
             
             DispatchQueue.main.async() {
-                
-                for item in json {
-                    guard let name = item["name"] as? String else { continue }
+            
+                for item in json.arrayValue {
+                    guard let name = item["name"].string else { continue }
                     
                     let fetchRequest = NSFetchRequest<Repo>(entityName: "Repo")
                     fetchRequest.predicate = NSPredicate(format: "name == %@", name)
@@ -166,11 +166,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     default:
                         fatalError("Internal error")
                     }
+                    
                     repo.name     = name
-                    let owner     = item["owner"]       as? [String: Any]
-                    repo.userName = owner?["login"]     as? String ?? ""
-                    repo.desc     = item["description"] as? String ?? "No description provided"
-                    repo.url      = item["html_url"]    as? String ?? ""
+                    repo.userName = item["owner"]["login"].stringValue
+                    repo.desc     = item["description"].string ?? "No description provided"
+                    repo.url      = item["html_url"].stringValue
+                    repo.numStars = Int64(item["stargazers_count"].int!)
+                    repo.views    = NSMutableArray()
+                    repo.views!.removeAllObjects()
+                    
+                    GithubService.getRepoCommits(byAuthor: item["owner"]["login"].stringValue, byName: name)
+                    .onSuccess { json in
+                        guard let json = json.array else { return }
+                        for item in json {
+                            repo.views!.add(item["total"].intValue)
+                        }
+                    }
+                    .onFailure { reason in
+                        print(reason)
+                    }
+                    .perform(withAuthorization: UserModel.shared)
                     
                 }
             }
@@ -178,18 +193,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         .onFailure { (reason) in
             print(reason)
         }
-        .perform(withAuthorization: nil)
+        .perform(withAuthorization: UserModel.shared)
         
         GithubService.getNotifications()
         .onSuccess { (json) in
-            guard let json = json as? [[String: Any]] else { return }
-//            print(json)
             
             DispatchQueue.main.async() {
-                
-                for item in json {
-                    guard let id = Int64(item["id"] as! String) else { continue }
+
+                for item in json.arrayValue {
                     
+                    guard let intId = item["id"].int else { continue }
+                    let id = Int64(intId)
+
                     let fetchRequest = NSFetchRequest<Notification>(entityName: "Notification")
                     fetchRequest.predicate = NSPredicate(format: "id == \(id)")
                     guard let result = try? CoreDataManager.shared.persistentContainer.viewContext.fetch(fetchRequest) else { continue }
@@ -204,10 +219,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                         fatalError("Internal error")
                     }
                     notif.id       = id
-                    notif.repo     = (item["repository"] as? [String:Any])? ["full_name"] as? String ?? ""
-                    notif.title    = (item["subject"]    as? [String:Any])? ["title"]     as? String ?? ""
-//                    notif.url      = (item["repository"] as? [String:Any])? ["html_url"]  as? String ?? ""
-                    
+                    notif.repo     = item["repository"]["full_name"].stringValue
+                    notif.title    = item["subject"]["title"].stringValue
                 }
             }
         }
