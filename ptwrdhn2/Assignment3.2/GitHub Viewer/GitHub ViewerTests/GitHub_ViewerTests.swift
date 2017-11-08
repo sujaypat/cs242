@@ -56,12 +56,31 @@ class GitHub_ViewerTests: XCTestCase {
     
     func testHasRepos() {
         GithubService.getRepos(byName: "sujaypat")
-            .onSuccess { (json) in
-                XCTAssert("sujaypat" == json["login"].stringValue)
-                XCTAssert(json["name"].string != nil)
-            }
-            .perform(withAuthorization: nil)
+        .onSuccess { (json) in
+            let json = json.arrayValue
+            XCTAssert(json.count > 0)
+        }
+        .perform(withAuthorization: nil)
     }
+    
+    func testHasFollowersAndFollowing() {
+        GithubService.getFollowers(byName: "sujaypat")
+        .onSuccess { (json) in
+            print(json)
+            let json = json.arrayValue
+            XCTAssert(json.count == 10)
+        }
+        .perform(withAuthorization: nil)
+        
+        GithubService.getFollowing(byName: "sujaypat")
+        .onSuccess { (json) in
+            print(json)
+            let json = json.arrayValue
+            XCTAssert(json.count == 8)
+        }
+        .perform(withAuthorization: nil)
+    }
+    
     
 }
 

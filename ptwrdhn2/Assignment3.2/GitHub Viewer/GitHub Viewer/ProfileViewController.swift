@@ -11,7 +11,7 @@ import Foundation
 import OAuthSwift
 import CoreData
 
-let USER: String = "coreos"
+let USER: String = "sujaypat"
 
 class ProfileViewController: UIViewController {
 

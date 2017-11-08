@@ -59,7 +59,7 @@ class NotificationsViewController: UITableViewController, NSFetchedResultsContro
         guard let fetchedObjects = fetchedResultsController.fetchedObjects else { return 0 }
         return fetchedObjects.count
     }
-    // loads profile image for each profile in the table cell
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         
