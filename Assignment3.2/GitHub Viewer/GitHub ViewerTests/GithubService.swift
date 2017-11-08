@@ -72,7 +72,7 @@ class GithubService: APIService {
     }
     
     open class func getNotifications() -> APIRequest<GithubService, JSON> {
-        return APIRequest<GithubService, JSON>(endpoint: "/notifications", params: nil, body: nil, method: .GET)
+        return APIRequest<GithubService, JSON>(endpoint: "/notifications", params: ["all": "true"], body: nil, method: .GET)
     }
     
     open class func searchForRepo(params: [String: String]) -> APIRequest<GithubService, JSON> {

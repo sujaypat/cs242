@@ -55,7 +55,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         )
         let _ = self.oauthswift!.authorize(
             withCallbackURL: "github-viewer://asdf",
-            scope: "user,public_repo,notifications",
+            scope: "user,repo,notifications",
             state: "authorized",
             success: { credential, response, parameters in
                 UserModel.shared.key = credential.oauthToken
@@ -197,12 +197,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         GithubService.getNotifications()
         .onSuccess { (json) in
-            
+
             DispatchQueue.main.async() {
 
                 for item in json.arrayValue {
                     
-                    guard let intId = item["id"].int else { continue }
+                    let intId = item["id"].intValue // else { continue }
                     let id = Int64(intId)
 
                     let fetchRequest = NSFetchRequest<Notification>(entityName: "Notification")
