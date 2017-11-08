@@ -72,9 +72,9 @@ class ReposViewController: UITableViewController, NSFetchedResultsControllerDele
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if let profileViewController = segue.destination as? ProfileViewController,
+        if let repoDetail = segue.destination as? RepoDetailViewController,
             let indexPath = sender as? IndexPath {
-            profileViewController.username = fetchedResultsController.object(at: indexPath).userName ?? ""
+            repoDetail.model = fetchedResultsController.object(at: indexPath)
         }
     }
     
@@ -105,8 +105,8 @@ class ReposViewController: UITableViewController, NSFetchedResultsControllerDele
     // MARK: UITableViewDelegate
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
-        let view = SFSafariViewController(url: URL(string: fetchedResultsController.object(at: indexPath).url!)!)
-        self.present(view, animated: true, completion: nil)
+        performSegue(withIdentifier: "showRepoDetailViewController", sender: indexPath)
+//        self.present(view, animated: true, completion: nil)
     }
     
     // MARK: NSFetchedResultsControllerDelegate

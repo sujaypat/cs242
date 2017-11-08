@@ -1,25 +1,32 @@
 PODS:
-  - APIManager (0.0.5)
-  - OAuthSwift (1.1.2)
+  - APIManager (0.1.0)
+  - Charts (3.0.4):
+    - Charts/Core (= 3.0.4)
+  - Charts/Core (3.0.4)
+  - OAuthSwift (1.2.0)
+  - SwiftyJSON (3.1.4)
 
 DEPENDENCIES:
-  - APIManager
-  - OAuthSwift (from `https://github.com/OAuthSwift/OAuthSwift.git`, branch `swift3`)
+  - APIManager (~> 0.1)
+  - Charts
+  - OAuthSwift (from `https://github.com/OAuthSwift/OAuthSwift.git`)
+  - SwiftyJSON
 
 EXTERNAL SOURCES:
   OAuthSwift:
-    :branch: swift3
     :git: https://github.com/OAuthSwift/OAuthSwift.git
 
 CHECKOUT OPTIONS:
   OAuthSwift:
-    :commit: 79e1f437ce1e5819e87e0304eb0f7b6e371209fc
+    :commit: bc25abe8d719e9c1eccc9446568e167259f1585d
     :git: https://github.com/OAuthSwift/OAuthSwift.git
 
 SPEC CHECKSUMS:
-  APIManager: 8f54a4a3f21d93068fd5e0e06b0ae6c011be29b5
-  OAuthSwift: a4e5e5563971918dbfb9701aff6db0bf278d0ada
+  APIManager: 6ae3fea8f70732812ddc2313b5ce1af67dab157d
+  Charts: 0705898046257443f0afbbc3179f4b67507b6e48
+  OAuthSwift: de40135b7d3b2d6a956386ec02af10d3519a8f5d
+  SwiftyJSON: c2842d878f95482ffceec5709abc3d05680c0220
 
-PODFILE CHECKSUM: ae647c2fae3e9bb40ff1f121717458dc580b599f
+PODFILE CHECKSUM: bf0eec82922da56ea2f9681d4ed9e4e97687ca12
 
 COCOAPODS: 1.3.1

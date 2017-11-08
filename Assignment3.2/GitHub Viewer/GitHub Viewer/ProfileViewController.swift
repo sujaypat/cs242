@@ -11,7 +11,7 @@ import Foundation
 import OAuthSwift
 import CoreData
 
-let USER: String = "sujaypat"
+let USER: String = "coreos"
 
 class ProfileViewController: UIViewController {
 
@@ -35,23 +35,23 @@ class ProfileViewController: UIViewController {
 
         GithubService.getUser(byName: username)
         .onSuccess { (json) in
-            guard let json = json as? [String: Any] else { return }
+//            guard let json = json as? [String: Any] else { return }
 
-            self.downloadImage(url: URL(string: json["avatar_url"] as! String)! )
+            self.downloadImage(url: URL(string: json["avatar_url"].stringValue)! )
 
             DispatchQueue.main.async() {
                 // populate the labels on the profile page
-                self.actualName.text = json["name"]  as? String ?? ""
-                self.userName.text   = json["login"] as? String ?? ""
-                self.bio.text        = json["bio"]   as? String ?? "No bio provided :("
-                self.website.text    = json["blog"]  as? String ?? "No website provided :("
-                self.email.text      = json["email"] as? String ?? "No public email :("
-                self.created.text    = "created on: " + (json["created_at"] as? String ?? "")
+                self.actualName.text = json["name"].stringValue
+                self.userName.text   = json["login"].stringValue
+                self.bio.text        = json["bio"].string ?? "No bio provided :("
+                self.website.text    = json["blog"].string ?? "No website provided :("
+                self.email.text      = json["email"].string ?? "No public email :("
+                self.created.text    = "created on: " + (json["created_at"].string ?? "")
 
                 // populate button labels
-                self.repos.setTitle("\(json["public_repos"] as? Int ?? 0) public repos", for: .normal)
-                self.followers.setTitle("Followers: \(json["followers"] as? Int ?? 0)",  for: .normal)
-                self.following.setTitle("Following: \(json["following"] as? Int ?? 0)",  for: .normal)
+                self.repos.setTitle("\(json["public_repos"].intValue) public repos", for: .normal)
+                self.followers.setTitle("Followers: \(json["followers"].intValue)",  for: .normal)
+                self.following.setTitle("Following: \(json["following"].intValue)",  for: .normal)
             }
         }
         .onFailure { (reason: String) in
