@@ -1,0 +1,25 @@
+PODS:
+  - APIManager (0.0.5)
+  - OAuthSwift (1.1.2)
+
+DEPENDENCIES:
+  - APIManager
+  - OAuthSwift (from `https://github.com/OAuthSwift/OAuthSwift.git`, branch `swift3`)
+
+EXTERNAL SOURCES:
+  OAuthSwift:
+    :branch: swift3
+    :git: https://github.com/OAuthSwift/OAuthSwift.git
+
+CHECKOUT OPTIONS:
+  OAuthSwift:
+    :commit: 79e1f437ce1e5819e87e0304eb0f7b6e371209fc
+    :git: https://github.com/OAuthSwift/OAuthSwift.git
+
+SPEC CHECKSUMS:
+  APIManager: 8f54a4a3f21d93068fd5e0e06b0ae6c011be29b5
+  OAuthSwift: a4e5e5563971918dbfb9701aff6db0bf278d0ada
+
+PODFILE CHECKSUM: ae647c2fae3e9bb40ff1f121717458dc580b599f
+
+COCOAPODS: 1.3.1

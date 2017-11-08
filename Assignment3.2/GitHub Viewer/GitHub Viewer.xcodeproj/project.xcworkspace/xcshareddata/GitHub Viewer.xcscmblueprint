@@ -1,0 +1,25 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "c830209f-e47d-4feb-a7dd-e718440f945f++2769",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+    "c830209f-e47d-4feb-a7dd-e718440f945f++2769" : {
+
+    }
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "c830209f-e47d-4feb-a7dd-e718440f945f++2769" : 9223372036854775807
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "6D927E75-D51C-4CE9-A691-BD2899E62369",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "c830209f-e47d-4feb-a7dd-e718440f945f++2769" : "cs242\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "GitHub Viewer",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "Assignment3.0\/GitHub Viewer\/GitHub Viewer.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/subversion.ews.illinois.edu\/svn\/fa17-cs242",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Subversion",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "c830209f-e47d-4feb-a7dd-e718440f945f++2769"
+    }
+  ]
+}
